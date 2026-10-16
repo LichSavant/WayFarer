@@ -1,17 +1,17 @@
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Page, colors, Icon, s, SectionHeader } from "../../components/ui";
-import { CinematicHero } from "../../components/CinematicHero";
+import { DestinationHero } from "../../components/hero/DestinationHero";
 import { PopularRouteCard } from "../../components/PopularRouteCard";
 import { popularRoutes } from "../../data/popularRoutes";
 import { useTravel } from "../../store/TravelContext";
 import { useResponsive } from "../../hooks/useResponsive";
 export default function Explore() {
-  const { setSearch } = useTravel();
+  const { search, setSearch } = useTravel();
   const { wide, width } = useResponsive();
   return (
     <Page immersive>
-      <CinematicHero />
+      <DestinationHero destination={search.destination} />
       <View
         style={{
           width: "100%",
@@ -24,7 +24,7 @@ export default function Explore() {
       >
         <View style={{ gap: 22 }}>
           <SectionHeader
-            title="A few good places to start"
+            title="Popular routes"
             caption={wide ? "Popular routes from the islands" : undefined}
           />
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 20 }}>

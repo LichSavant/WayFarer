@@ -4,7 +4,11 @@ import { router } from "expo-router";
 import { useTravel, formatDate } from "../store/TravelContext";
 import { toTravelRequest } from "../services/travel/adapters";
 import { useResponsive } from "../hooks/useResponsive";
-import { Button, colors, Icon, s } from "./ui";
+import { Icon, s } from "./ui";
+import { glass, radius } from "./theme";
+import { GlassSurface } from "./glass/GlassSurface";
+import { GlassPanel } from "./glass/GlassPanel";
+import { GlassButton } from "./glass/GlassButton";
 import { LocationInput } from "./LocationInput";
 import { SearchProgress } from "./SearchProgress";
 export function SearchCard() {
@@ -24,28 +28,38 @@ export function SearchCard() {
   }
   return (
     <View style={{ zIndex: 20, gap: 10 }}>
-      <View style={[s.card, { padding: desktop ? 24 : 20, gap: 20 }]}>
-        <View style={s.between}>
-          <Text style={s.eyebrow}>ONE WAY · SEA & SKY</Text>
-          <Text style={[s.muted, { fontSize: 11 }]}>Philippines</Text>
+      <GlassSurface
+        level="functional"
+        blur={false}
+        style={{ padding: desktop ? 22 : 18, gap: 18 }}
+      >
+        <View style={[s.between, { gap: 10 }]}>
+          <Text style={{ fontSize: 9, letterSpacing: 1.6, color: glass.muted }}>
+            YOUR JOURNEY · ONE WAY
+          </Text>
+          <View style={[s.row, { gap: 10 }]}>
+            <Icon name="boat-outline" size={15} color={glass.dim} />
+            <Icon name="airplane-outline" size={15} color={glass.dim} />
+          </View>
         </View>
         <View
           style={{
             flexDirection: desktop ? "row" : "column",
             alignItems: desktop ? "center" : "stretch",
-            gap: desktop ? 22 : 20,
+            gap: desktop ? 20 : 18,
             zIndex: 10,
           }}
         >
           <View
             style={{
-              flex: desktop ? 2 : undefined,
+              flex: desktop ? 2.1 : undefined,
               flexDirection: desktop ? "row" : "column",
-              gap: 16,
+              gap: 14,
               zIndex: 20,
             }}
           >
             <LocationInput
+              inverse
               label="From"
               value={search.origin}
               onChange={(origin) => setSearch((v) => ({ ...v, origin }))}
@@ -62,21 +76,24 @@ export function SearchCard() {
               }
               style={({ pressed }) => ({
                 alignSelf: desktop ? "center" : "flex-end",
-                marginVertical: desktop ? 0 : -10,
-                backgroundColor: colors.pale,
+                marginVertical: desktop ? 0 : -12,
+                borderWidth: 1,
+                borderColor: glass.separator,
                 padding: 10,
-                borderRadius: 22,
-                opacity: pressed ? 0.6 : 1,
+                borderRadius: radius.small,
+                backgroundColor: glass.hover,
+                opacity: pressed ? 0.65 : 1,
                 zIndex: 5,
               })}
             >
               <Icon
                 name={desktop ? "swap-horizontal" : "swap-vertical"}
                 size={18}
-                color={colors.blue}
+                color={glass.text}
               />
             </Pressable>
             <LocationInput
+              inverse
               label="To"
               value={search.destination}
               onChange={(destination) =>
@@ -86,13 +103,13 @@ export function SearchCard() {
           </View>
           <View
             style={{
-              flex: desktop ? 1.3 : undefined,
+              flex: desktop ? 1.4 : undefined,
               flexDirection: "row",
-              gap: 24,
+              gap: 20,
               borderLeftWidth: desktop ? 1 : 0,
               borderTopWidth: desktop ? 0 : 1,
-              borderColor: colors.line,
-              paddingLeft: desktop ? 22 : 0,
+              borderColor: glass.separator,
+              paddingLeft: desktop ? 20 : 0,
               paddingTop: desktop ? 0 : 18,
             }}
           >
@@ -104,30 +121,48 @@ export function SearchCard() {
                 style={({ pressed }) => ({
                   flex: 1,
                   gap: 10,
-                  opacity: pressed ? 0.6 : 1,
+                  opacity: pressed ? 0.65 : 1,
                 })}
               >
-                <Text style={s.eyebrow}>
+                <Text
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: 1.5,
+                    color: glass.muted,
+                  }}
+                >
                   {i === 0 ? "DEPARTURE" : "TRAVELERS"}
                 </Text>
-                <View style={[s.row, { gap: 7 }]}>
-                  <Text style={[s.body, { fontSize: 17, fontWeight: "600" }]}>
+                <View style={[s.row, { gap: 6 }]}>
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      fontWeight: "500",
+                      color: glass.text,
+                    }}
+                  >
                     {i === 0
                       ? formatDate(search.date)
                       : `${search.passengers} Adult${search.passengers > 1 ? "s" : ""}`}
                   </Text>
-                  <Icon name="chevron-down" size={13} color={colors.muted} />
+                  <Icon name="chevron-down" size={12} color={glass.dim} />
                 </View>
               </Pressable>
             ))}
           </View>
-          <Button title="Search routes" icon="arrow-forward" onPress={submit} />
+          <GlassButton
+            primary
+            title="Search routes"
+            icon="arrow-forward"
+            disabled={searching}
+            onPress={submit}
+          />
         </View>
-      </View>
+      </GlassSurface>
       {!!(error || searchError) && (
         <Text
           accessibilityRole="alert"
-          style={{ color: "#A63B32", fontSize: 13 }}
+          style={{ color: glass.error, fontSize: 13 }}
         >
           {error || searchError}
         </Text>
@@ -146,20 +181,28 @@ export function SearchCard() {
         <View
           style={{
             flex: 1,
-            backgroundColor: "#152C3B66",
+            backgroundColor: glass.scrim,
             justifyContent: "center",
             padding: 24,
             alignItems: "center",
           }}
         >
-          <View
-            style={[s.card, { width: "100%", maxWidth: 440, maxHeight: "90%" }]}
+          <GlassPanel
+            style={{
+              width: "100%",
+              maxWidth: 440,
+              maxHeight: "90%",
+              backgroundColor: glass.darkStrong,
+            }}
           >
-            <ScrollView contentContainerStyle={{ gap: 12 }}>
-              <Text style={s.sectionTitle}>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ gap: 12 }}
+            >
+              <Text style={[s.sectionTitle, { color: glass.text }]}>
                 {picker === "date" ? "Choose departure" : "How many travelers?"}
               </Text>
-              <Text style={s.muted}>
+              <Text style={[s.muted, { color: glass.muted }]}>
                 {picker === "date"
                   ? "Available demo dates · October 2026"
                   : "Adults · age 12 and above"}
@@ -174,9 +217,8 @@ export function SearchCard() {
                   ]
                 : [1, 2, 3, 4, 5, 6]
               ).map((value) => (
-                <Button
+                <GlassButton
                   key={value}
-                  secondary
                   title={
                     typeof value === "string"
                       ? formatDate(value)
@@ -190,13 +232,13 @@ export function SearchCard() {
                   }}
                 />
               ))}
-              <Button
-                title="Cancel"
-                secondary
+              <GlassButton
+                primary
+                title="Done"
                 onPress={() => setPicker(null)}
               />
             </ScrollView>
-          </View>
+          </GlassPanel>
         </View>
       </Modal>
     </View>

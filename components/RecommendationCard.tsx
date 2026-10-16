@@ -2,6 +2,8 @@
 import { JourneyRoute } from "../types/travel";
 import { Button, colors, Icon, s } from "./ui";
 import { fare, duration } from "../data/routes";
+import { GlassPanel } from "./glass/GlassPanel";
+import { glass } from "./theme";
 export function RecommendationCard({
   label,
   option,
@@ -20,15 +22,16 @@ export function RecommendationCard({
   onPress: () => void;
 }) {
   return (
-    <View
+    <GlassPanel
+      tone="light"
+      blur={false}
       style={[
-        s.card,
         {
           flex: 1,
           height: "100%",
           padding: 22,
-          borderColor: primary ? colors.blue : colors.line,
-          backgroundColor: primary ? "#F0F6FA" : "white",
+          borderColor: primary ? glass.highlight : glass.borderStrong,
+          backgroundColor: primary ? glass.lightStrong : glass.light,
           gap: 18,
         },
       ]}
@@ -82,7 +85,9 @@ export function RecommendationCard({
       </View>
       <View style={s.line} />
       <View style={{ gap: 4 }}>
-        <Text style={s.price}>
+        <Text
+          style={[s.price, { fontSize: primary ? 32 : 25, fontWeight: "500" }]}
+        >
           {fare(option.pricePerTraveler * travelers)}{" "}
           <Text style={[s.muted, { fontWeight: "400" }]}>total</Text>
         </Text>
@@ -110,6 +115,6 @@ export function RecommendationCard({
         icon="arrow-forward"
         onPress={onPress}
       />
-    </View>
+    </GlassPanel>
   );
 }

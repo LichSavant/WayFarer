@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SiteHeader } from "./SiteHeader";
 import { useResponsive } from "../hooks/useResponsive";
-import { colors } from "./theme";
+import { colors, radius, layout } from "./theme";
 import { Icon } from "./Icon";
 export { colors } from "./theme";
 export { Icon } from "./Icon";
@@ -99,7 +99,7 @@ export function EmptyState({ title, body }: { title: string; body: string }) {
 export const s = StyleSheet.create({
   page: {
     width: "100%",
-    maxWidth: 1200,
+    maxWidth: layout.contentMax,
     alignSelf: "center",
     padding: 24,
     paddingBottom: 40,
@@ -133,7 +133,7 @@ export const s = StyleSheet.create({
   },
   card: {
     backgroundColor: "white",
-    borderRadius: 12,
+    borderRadius: radius.medium,
     padding: 20,
     borderWidth: 1,
     borderColor: colors.line,

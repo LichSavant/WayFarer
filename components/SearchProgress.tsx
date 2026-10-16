@@ -1,6 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import { ActivityIndicator, Modal, Text, View } from "react-native";
 import { colors, Icon, s } from "./ui";
+import { glass } from "./theme";
+import { GlassPanel } from "./glass/GlassPanel";
 const stages = [
   "Checking flights…",
   "Checking ferries…",
@@ -33,24 +35,31 @@ export function SearchProgress({
       <View
         style={{
           flex: 1,
-          backgroundColor: "#152C3B66",
+          backgroundColor: glass.scrim,
           padding: 24,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <View
+        <GlassPanel
           accessibilityLiveRegion="polite"
           style={[
-            s.card,
-            { width: "100%", maxWidth: 460, padding: 32, gap: 22 },
+            {
+              width: "100%",
+              maxWidth: 460,
+              padding: 32,
+              gap: 22,
+              backgroundColor: glass.darkStrong,
+            },
           ]}
         >
           <View style={s.between}>
-            <Text style={s.eyebrow}>FINDING YOUR WAY</Text>
-            <ActivityIndicator color={colors.blue} />
+            <Text style={[s.eyebrow, { color: glass.dim }]}>
+              FINDING YOUR WAY
+            </Text>
+            <ActivityIndicator color={colors.aqua} />
           </View>
-          <Text style={s.sectionTitle}>
+          <Text style={[s.sectionTitle, { color: glass.text }]}>
             Searching {origin} → {destination}
           </Text>
           {stages.map((stage, i) => (
@@ -63,23 +72,20 @@ export function SearchProgress({
                       ? "ellipse"
                       : "ellipse-outline"
                 }
-                color={i <= step ? colors.blue : colors.line}
+                color={i <= step ? colors.aqua : glass.dim}
                 size={18}
               />
               <Text
-                style={[
-                  s.body,
-                  { color: i <= step ? colors.navy : colors.muted },
-                ]}
+                style={[s.body, { color: i <= step ? glass.text : glass.dim }]}
               >
                 {stage}
               </Text>
             </View>
           ))}
-          <Text style={s.muted}>
+          <Text style={[s.muted, { color: glass.dim }]}>
             Comparing mock provider inventory. No live fares.
           </Text>
-        </View>
+        </GlassPanel>
       </View>
     </Modal>
   );

@@ -84,6 +84,29 @@ Created: `components/BookingModal.tsx`, `Icon.tsx`, `LocationInput.tsx`, `Recomm
 
 Commands run successfully: `npm run typecheck`, `npm test`, `npx expo export --platform web`, `npx expo export --platform android`, `git diff --check`. The development server started on port 8082 (8081 was already occupied) and returned HTTP 200. Visual breakpoint checks remain pending as noted above.
 
-## Cinematic landing carousel
+## Glass visual redesign
 
-Explore now uses a full-bleed photograph backdrop, inset frame and white navigation, with its existing search module over the image. `components/CinematicHero.tsx`, `hooks/useHeroCarousel.ts` and `data/heroSlides.ts` separate presentation, motion lifecycle and slide content. Three local images crossfade with slow zoom motion; users can pause, step or select a slide. Reduced-motion settings disable autoplay and transitions. Timers stop when Explore loses focus or the app moves to the background. Other screens retain the standard header. No animation dependency was added.
+The homepage now uses a full-bleed local destination image and a large architectural dark-glass frame. Desktop hero height targets 96% of the viewport; its 92%-wide frame caps at 1400px, targets 74% of the viewport height and grows as needed for content. Mobile retains the image with a stacked search and scrollable content. Navigation remains inside the hero frame, while other screens use the bright header. Popular routes now use image-led cards and dark translucent fare overlays. Best Value receives more width and stronger typography than the secondary recommendations; All routes and itinerary details remain mostly solid/readable.
+
+### Reusable system
+
+- Added `components/glass/GlassSurface.tsx`, `GlassPanel.tsx`, `GlassButton.tsx` and `styles.ts`.
+- Added `components/hero/DestinationHero.tsx` and `components/RecommendationsSection.tsx`.
+- Extended `components/theme.ts` with dark/light/strong glass tints, separators, highlight and text colors; structural/functional/micro blur levels; small/medium/large/hero radii; soft/elevated shadows; hero/content layout tokens; native fallback colors; and the pale aqua CTA accent.
+- The centralized web style boundary uses `Platform.select` and a typed style extension for `backdropFilter` and `WebkitBackdropFilter`. Structural blur is 22px; functional blur is 16px. Native builds receive translucent tint fallbacks without web CSS properties. No `as any` casts or new packages were needed.
+
+### Motion and performance
+
+The new brief's calm-motion direction replaces continuous carousel autoplay/zoom with manual image selection and a brief reduced-motion-aware fade. Only the selected hero image is mounted. Generic photo captions do not claim to depict the selected destination. `destinationImagery` and `getDestinationSlide` provide the future verified destination-image mapping boundary.
+
+The hero has one major backdrop blur. Embedded search, micro controls, destination overlays and individual pick panels do not add heavy filters. Only open dropdowns/dialogs use an additional small functional blur. Recommendations share one light-blur environmental surface. Local imagery is reused; popular route thumbnails still load from Unsplash.
+
+### Files modified
+
+`app/(tabs)/index.tsx`, `app/results.tsx`; `components/CinematicHero.tsx`, `LocationInput.tsx`, `PopularRouteCard.tsx`, `RecommendationCard.tsx`, `SearchCard.tsx`, `SearchProgress.tsx`, `SiteHeader.tsx`, `theme.ts`, `ui.tsx`; `data/heroSlides.ts`, `hooks/useHeroCarousel.ts`, and this README.
+
+### Checks and remaining frontend work
+
+Strict TypeScript and existing functional tests pass. A React Native Web server-render smoke check confirms emission of both blur properties and no nested blur for embedded/micro surfaces. Production web bundling is checked separately.
+
+Visual browser checks at 1440, 1280, 1024, 768 and mobile widths remain pending because no connected browser was available. Confirm glass/contrast/focus behavior in Chrome and Safari, test native fallbacks on physical devices, and add verified destination-specific photography/mappings. No backend, APIs, authentication or payment integration was added.

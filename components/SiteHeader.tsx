@@ -1,6 +1,6 @@
 ﻿import { Pressable, Text, View } from "react-native";
 import { router, usePathname } from "expo-router";
-import { colors } from "./theme";
+import { colors, glass, layout, radius } from "./theme";
 import { Icon } from "./Icon";
 const s = {
   row: {
@@ -17,16 +17,16 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
     <View
       style={{
         borderBottomWidth: 1,
-        borderColor: inverse ? "#FFFFFF20" : colors.line,
+        borderColor: inverse ? glass.separator : colors.line,
         backgroundColor: inverse ? "transparent" : colors.bg,
       }}
     >
       <View
         style={{
           width: "100%",
-          maxWidth: 1200,
+          maxWidth: inverse ? layout.heroMax : layout.contentMax,
           alignSelf: "center",
-          paddingHorizontal: inverse && desktop ? 48 : 24,
+          paddingHorizontal: inverse && desktop ? layout.heroPadding : 24,
           paddingVertical: desktop ? 24 : 16,
           flexDirection: "row",
           alignItems: "center",
@@ -43,8 +43,8 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
             style={{
               width: 32,
               height: 32,
-              borderRadius: 9,
-              backgroundColor: inverse ? "#FFFFFF1A" : colors.navy,
+              borderRadius: radius.small,
+              backgroundColor: inverse ? glass.hover : colors.navy,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -59,7 +59,10 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
               color: inverse ? "white" : colors.navy,
             }}
           >
-            WayFarer<Text style={{ color: colors.blue }}>.</Text>
+            WayFarer
+            <Text style={{ color: inverse ? colors.aqua : colors.blue }}>
+              .
+            </Text>
           </Text>
         </Pressable>
         <View style={[s.row, { gap: 34 }]}>
@@ -91,7 +94,7 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
                       color: inverse
                         ? active
                           ? "white"
-                          : "#FFFFFFB8"
+                          : glass.muted
                         : active
                           ? colors.blue
                           : colors.navy,

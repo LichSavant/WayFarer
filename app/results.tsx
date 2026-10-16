@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Page, Icon, s, EmptyState, Button, colors } from "../components/ui";
 import { FilterChip } from "../components/FilterChip";
 import { RouteCard } from "../components/RouteCard";
-import { RecommendationCard } from "../components/RecommendationCard";
+import { RecommendationsSection } from "../components/RecommendationsSection";
 import { SearchProgress } from "../components/SearchProgress";
 import { useTravel, formatDate } from "../store/TravelContext";
 import { useResponsive } from "../hooks/useResponsive";
@@ -13,7 +13,7 @@ import { getRecommendations } from "../utils/recommendations";
 import { JourneyRoute } from "../types/travel";
 export default function Results() {
   const { search, session, searching, searchError, runSearch } = useTravel();
-  const { columns, wide } = useResponsive();
+  const { wide } = useResponsive();
   const params = useLocalSearchParams<{
     origin?: string;
     destination?: string;
@@ -108,52 +108,11 @@ export default function Results() {
             </Text>
           ))}
           {picks.length > 0 && (
-            <View style={{ gap: 18 }}>
-              <View style={{ gap: 6 }}>
-                <Text style={[s.sectionTitle, { fontSize: 26 }]}>
-                  WayFarer Picks
-                </Text>
-                <Text style={s.muted}>
-                  Three ways to find your fit. Compared across all available
-                  routes.
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: wide ? "row" : "column",
-                  flexWrap: "wrap",
-                  gap: 16,
-                  alignItems: "stretch",
-                }}
-              >
-                {picks.map((pick) => (
-                  <View
-                    key={pick.key}
-                    style={{
-                      flex: columns === 3 ? 1 : undefined,
-                      width:
-                        columns === 3
-                          ? undefined
-                          : wide && pick.key !== "best"
-                            ? "48%"
-                            : "100%",
-                      flexGrow: 1,
-                    }}
-                  >
-                    <RecommendationCard
-                      {...pick}
-                      primary={pick.key === "best"}
-                      travelers={itinerary.passengers}
-                      onPress={() => open(pick.option)}
-                    />
-                  </View>
-                ))}
-              </View>
-              <Text style={[s.muted, { fontSize: 11 }]}>
-                Best Value balances fare, journey time and transfers, with a
-                preference for direct routes. Picks may overlap.
-              </Text>
-            </View>
+            <RecommendationsSection
+              picks={picks}
+              travelers={itinerary.passengers}
+              onSelect={open}
+            />
           )}
           <View style={{ gap: 18 }}>
             <View style={[s.between, { flexWrap: "wrap", gap: 8 }]}>
