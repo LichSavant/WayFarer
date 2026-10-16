@@ -8,27 +8,12 @@ import {
   ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "@expo/vector-icons/Ionicons";
-export const colors = {
-  navy: "#152C3B",
-  blue: "#2873A8",
-  muted: "#7A858A",
-  line: "#E3E8E9",
-  bg: "#F7F8F6",
-  pale: "#EAF2F5",
-  white: "#FFFFFF",
-};
-export function Icon({
-  name,
-  size = 22,
-  color = colors.navy,
-}: {
-  name: React.ComponentProps<typeof Ionicons>["name"];
-  size?: number;
-  color?: string;
-}) {
-  return <Ionicons name={name} size={size} color={color} />;
-}
+import { SiteHeader } from "./SiteHeader";
+import { useResponsive } from "../hooks/useResponsive";
+import { colors } from "./theme";
+import { Icon } from "./Icon";
+export { colors } from "./theme";
+export { Icon } from "./Icon";
 export function Button({
   title,
   onPress,
@@ -62,17 +47,25 @@ export function Button({
 export function Page({
   children,
   style,
+  immersive = false,
 }: {
   children: React.ReactNode;
   style?: ViewStyle;
+  immersive?: boolean;
 }) {
+  const { wide } = useResponsive();
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
       style={{ flex: 1, backgroundColor: colors.bg }}
     >
+      {!immersive && <SiteHeader />}
       <ScrollView
-        contentContainerStyle={[s.page, style]}
+        contentContainerStyle={[
+          immersive ? { width: "100%" } : s.page,
+          !immersive && { padding: wide ? 32 : 20 },
+          style,
+        ]}
         keyboardShouldPersistTaps="handled"
       >
         {children}
@@ -106,7 +99,7 @@ export function EmptyState({ title, body }: { title: string; body: string }) {
 export const s = StyleSheet.create({
   page: {
     width: "100%",
-    maxWidth: 760,
+    maxWidth: 1200,
     alignSelf: "center",
     padding: 24,
     paddingBottom: 40,
@@ -140,7 +133,7 @@ export const s = StyleSheet.create({
   },
   card: {
     backgroundColor: "white",
-    borderRadius: 18,
+    borderRadius: 12,
     padding: 20,
     borderWidth: 1,
     borderColor: colors.line,

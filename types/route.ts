@@ -1,4 +1,4 @@
-export type TransportMode = "ferry" | "flight";
+export type TransportMode = "ferry" | "flight" | "bus" | "van" | "train";
 export interface Route {
   id: string;
   provider: string;

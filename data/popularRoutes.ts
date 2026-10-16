@@ -3,7 +3,7 @@ export const popularRoutes = [
     origin: "Cebu City",
     destination: "Bohol",
     subtitle: "A little island time",
-    price: 800,
+    price: 650,
     modes: "Ferry & flight",
     image:
       "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=85",

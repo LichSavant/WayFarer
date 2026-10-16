@@ -5,7 +5,7 @@ import { trips } from "../../data/trips";
 import { formatDate } from "../../store/TravelContext";
 export default function Trips() {
   return (
-    <Page>
+    <Page style={{ maxWidth: 850 }}>
       <Text style={s.eyebrow}>THE JOURNEY AHEAD</Text>
       <Text style={s.title}>Your trips</Text>
       <Text style={s.body}>

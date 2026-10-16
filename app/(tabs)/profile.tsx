@@ -8,7 +8,7 @@ export default function Profile() {
   const [notifications, setNotifications] = useState(true);
   const [preference, setPreference] = useState("Best value");
   return (
-    <Page>
+    <Page style={{ maxWidth: 850 }}>
       <Text style={s.eyebrow}>YOUR LITTLE CORNER</Text>
       <Text style={s.title}>Profile</Text>
       <View style={{ alignItems: "center", paddingVertical: 20, gap: 10 }}>

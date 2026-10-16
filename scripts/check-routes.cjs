@@ -23,7 +23,7 @@ assert.equal(results.length, 3);
 assert.equal(results.filter((r) => r.mode === "ferry").length, 2);
 assert.equal(
   [...results].sort((a, b) => a.price - b.price)[0].provider,
-  "OceanJet",
+  "SuperCat",
 );
 assert.equal(
   [...results].sort((a, b) => a.durationMinutes - b.durationMinutes)[0].id,

@@ -1,16 +1,17 @@
 ﻿import { Tabs } from "expo-router";
 import { Icon, colors } from "../../components/ui";
+import { useResponsive } from "../../hooks/useResponsive";
 export default function TabLayout() {
+  const { desktop } = useResponsive();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.blue,
         tabBarInactiveTintColor: colors.muted,
-        tabBarStyle: {
-          backgroundColor: colors.bg,
-          borderTopColor: colors.line,
-        },
+        tabBarStyle: desktop
+          ? { display: "none" }
+          : { backgroundColor: colors.bg, borderTopColor: colors.line },
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
       }}
     >

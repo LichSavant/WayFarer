@@ -8,7 +8,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/check-routes.cjs && node scripts/check-travel.cjs",
+    "format": "prettier --write app components config data hooks services store types utils scripts"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

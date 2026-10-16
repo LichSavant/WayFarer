@@ -5,36 +5,39 @@ import { s } from "./ui";
 export function PopularRouteCard({
   item,
   onPress,
+  fluid = false,
 }: {
   item: (typeof popularRoutes)[number];
   onPress: () => void;
+  fluid?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={`Explore ${item.origin} to ${item.destination}`}
       onPress={onPress}
       style={({ pressed }) => ({
-        width: 236,
+        width: fluid ? "100%" : 236,
         opacity: pressed ? 0.7 : 1,
         gap: 10,
       })}
     >
       <ImageBackground
         source={{ uri: item.image }}
-        imageStyle={{ borderRadius: 14 }}
+        imageStyle={{ borderRadius: 10 }}
         style={{
-          height: 165,
+          height: 178,
           justifyContent: "flex-end",
-          padding: 15,
+          padding: 14,
           backgroundColor: "#759BA5",
-          borderRadius: 14,
+          borderRadius: 10,
         }}
       >
         <View
           style={{
             backgroundColor: "#152C3BB8",
             alignSelf: "flex-start",
-            borderRadius: 6,
+            borderRadius: 5,
             paddingHorizontal: 9,
             paddingVertical: 4,
           }}
@@ -42,14 +45,16 @@ export function PopularRouteCard({
           <Text style={{ color: "white", fontSize: 11 }}>{item.modes}</Text>
         </View>
       </ImageBackground>
-      <View style={s.between}>
-        <Text style={[s.body, { fontWeight: "700" }]}>
-          {item.origin.replace(" City", "")} → {item.destination}
-        </Text>
-      </View>
+      <Text style={[s.body, { fontWeight: "700" }]}>
+        {item.origin.replace(" City", "")} → {item.destination}
+      </Text>
+      <Text style={s.muted}>{item.subtitle}</Text>
       <Text style={s.muted}>
-        {item.subtitle} · from{" "}
-        <Text style={{ fontWeight: "700" }}>{fare(item.price)}</Text>
+        From{" "}
+        <Text style={{ fontWeight: "700", color: "#152C3B" }}>
+          {fare(item.price)}
+        </Text>{" "}
+        / traveler
       </Text>
     </Pressable>
   );
