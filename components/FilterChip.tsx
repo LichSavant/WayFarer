@@ -1,5 +1,4 @@
-import { Pressable, Text } from "react-native";
-import { colors } from "./ui";
+﻿import { GlassButton } from "./glass/GlassButton";
 export function FilterChip({
   label,
   selected,
@@ -10,29 +9,23 @@ export function FilterChip({
   onPress: () => void;
 }) {
   return (
-    <Pressable
-      accessibilityRole="button"
+    <GlassButton
+      title={label}
+      primary={selected}
+      tone="light"
       accessibilityState={{ selected }}
       onPress={onPress}
-      style={({ pressed }) => ({
+      style={{
+        minHeight: 44,
         paddingHorizontal: 17,
-        paddingVertical: 11,
-        borderRadius: 24,
-        backgroundColor: selected ? colors.navy : "white",
-        borderWidth: 1,
-        borderColor: selected ? colors.navy : colors.line,
-        opacity: pressed ? 0.65 : 1,
-      })}
-    >
-      <Text
-        style={{
-          color: selected ? "white" : colors.navy,
-          fontSize: 13,
-          fontWeight: "600",
-        }}
-      >
-        {label}
-      </Text>
-    </Pressable>
+        paddingVertical: 10,
+        ...(selected
+          ? {
+              borderColor: "#7ABDC6",
+              backgroundColor: "rgba(189,239,242,0.65)",
+            }
+          : {}),
+      }}
+    />
   );
 }

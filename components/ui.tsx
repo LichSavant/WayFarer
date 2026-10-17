@@ -8,7 +8,9 @@ import {
   ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GlassButton } from "./glass/GlassButton";
 import { SiteHeader } from "./SiteHeader";
+import { SiteFooter } from "./SiteFooter";
 import { useResponsive } from "../hooks/useResponsive";
 import { colors, radius, layout } from "./theme";
 import { Icon } from "./Icon";
@@ -26,22 +28,13 @@ export function Button({
   icon?: React.ComponentProps<typeof Icon>["name"];
 }) {
   return (
-    <Pressable
-      accessibilityRole="button"
+    <GlassButton
+      title={title}
+      icon={icon}
       onPress={onPress}
-      style={({ pressed }) => [
-        s.button,
-        secondary && s.secondary,
-        pressed && { opacity: 0.7 },
-      ]}
-    >
-      <Text style={[s.buttonText, secondary && { color: colors.navy }]}>
-        {title}
-      </Text>
-      {icon && (
-        <Icon name={icon} color={secondary ? colors.navy : "white"} size={19} />
-      )}
-    </Pressable>
+      primary={!secondary}
+      tone="light"
+    />
   );
 }
 export function Page({
@@ -69,6 +62,7 @@ export function Page({
         keyboardShouldPersistTaps="handled"
       >
         {children}
+        {!immersive && <SiteFooter />}
       </ScrollView>
     </SafeAreaView>
   );
@@ -107,7 +101,7 @@ export const s = StyleSheet.create({
   },
   title: {
     fontSize: 34,
-    fontWeight: "700",
+    fontWeight: "500",
     color: colors.navy,
     letterSpacing: -1.2,
   },
@@ -132,7 +126,7 @@ export const s = StyleSheet.create({
     justifyContent: "space-between",
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: "#FAFBF8",
     borderRadius: radius.medium,
     padding: 20,
     borderWidth: 1,
@@ -146,7 +140,7 @@ export const s = StyleSheet.create({
     gap: 8,
   },
   button: {
-    backgroundColor: colors.navy,
+    backgroundColor: colors.aqua,
     borderRadius: 12,
     padding: 17,
     flexDirection: "row",
@@ -154,7 +148,7 @@ export const s = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  buttonText: { color: "white", fontSize: 15, fontWeight: "600" },
+  buttonText: { color: colors.navy, fontSize: 15, fontWeight: "600" },
   secondary: { backgroundColor: colors.pale },
   line: { height: 1, backgroundColor: colors.line },
   price: {

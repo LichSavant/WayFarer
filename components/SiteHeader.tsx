@@ -10,13 +10,19 @@ const s = {
   },
 };
 import { useResponsive } from "../hooks/useResponsive";
-export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
+export function SiteHeader({
+  inverse = false,
+  clear = false,
+}: {
+  inverse?: boolean;
+  clear?: boolean;
+}) {
   const { desktop } = useResponsive();
   const pathname = usePathname();
   return (
     <View
       style={{
-        borderBottomWidth: 1,
+        borderBottomWidth: clear ? 0 : 1,
         borderColor: inverse ? glass.separator : colors.line,
         backgroundColor: inverse ? "transparent" : colors.bg,
       }}
@@ -27,7 +33,7 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
           maxWidth: inverse ? layout.heroMax : layout.contentMax,
           alignSelf: "center",
           paddingHorizontal: inverse && desktop ? layout.heroPadding : 24,
-          paddingVertical: desktop ? 24 : 16,
+          paddingVertical: desktop ? (clear ? 22 : 24) : 16,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -41,10 +47,14 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
         >
           <View
             style={{
-              width: 32,
-              height: 32,
+              width: clear ? 24 : 32,
+              height: clear ? 24 : 32,
               borderRadius: radius.small,
-              backgroundColor: inverse ? glass.hover : colors.navy,
+              backgroundColor: clear
+                ? "transparent"
+                : inverse
+                  ? glass.hover
+                  : colors.navy,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -53,7 +63,7 @@ export function SiteHeader({ inverse = false }: { inverse?: boolean }) {
           </View>
           <Text
             style={{
-              fontSize: 23,
+              fontSize: clear ? 19 : 23,
               fontWeight: "700",
               letterSpacing: -1,
               color: inverse ? "white" : colors.navy,

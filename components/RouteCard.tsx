@@ -3,6 +3,7 @@ import { Route } from "../types/route";
 import { TravelOption } from "../types/travel";
 import { duration, fare } from "../data/routes";
 import { colors, Icon, s } from "./ui";
+import { radius, glass } from "./theme";
 import { TransportBadge } from "./TransportBadge";
 import { useResponsive } from "../hooks/useResponsive";
 export function RouteCard({
@@ -28,21 +29,45 @@ export function RouteCard({
       style={({ pressed }) => [
         s.card,
         {
-          opacity: pressed ? 0.7 : 1,
-          padding: 22,
-          gap: 20,
+          opacity: pressed ? 0.75 : 1,
+          padding: 24,
+          gap: 24,
           flexDirection: desktop ? "row" : "column",
           alignItems: desktop ? "center" : "stretch",
+          borderLeftWidth: 3,
+          borderLeftColor: recommendation ? colors.blue : colors.line,
         },
       ]}
     >
-      <View style={{ flex: desktop ? 1 : undefined, gap: 10 }}>
+      <View style={{ flex: desktop ? 1 : undefined, gap: 12 }}>
         <View style={[s.row, { gap: 10 }]}>
-          <Icon
-            name={route.mode === "ferry" ? "boat-outline" : "airplane-outline"}
-            color={colors.blue}
-          />
-          <Text style={[s.body, { fontWeight: "700", flex: 1 }]}>
+          <View
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: radius.small,
+              backgroundColor: colors.navy,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Icon
+              name={
+                route.mode === "flight"
+                  ? "airplane-outline"
+                  : route.mode === "ferry"
+                    ? "boat-outline"
+                    : route.mode === "train"
+                      ? "train-outline"
+                      : "bus-outline"
+              }
+              color={colors.aqua}
+              size={20}
+            />
+          </View>
+          <Text
+            style={[s.body, { fontWeight: "500", flex: 1, lineHeight: 21 }]}
+          >
             {route.provider}
           </Text>
         </View>
@@ -50,7 +75,12 @@ export function RouteCard({
           <TransportBadge mode={route.mode} />
           {recommendation && (
             <Text
-              style={{ fontSize: 11, fontWeight: "600", color: colors.blue }}
+              style={{
+                fontSize: 10,
+                lineHeight: 17,
+                fontWeight: "500",
+                color: colors.blue,
+              }}
             >
               {recommendation}
             </Text>
@@ -58,16 +88,16 @@ export function RouteCard({
         </View>
       </View>
       <View style={[s.between, { flex: desktop ? 1.8 : undefined, gap: 8 }]}>
-        <View style={{ flex: 1 }}>
-          <Text style={[s.sectionTitle, { fontSize: 18 }]}>
+        <View style={{ flex: 1, gap: 5 }}>
+          <Text style={[s.sectionTitle, { fontSize: 20, fontWeight: "500" }]}>
             {route.departureTime}
           </Text>
-          <Text style={[s.muted, { fontSize: 11 }]}>
+          <Text style={[s.muted, { fontSize: 11, lineHeight: 18 }]}>
             {route.departureTerminal}
           </Text>
         </View>
-        <View style={{ alignItems: "center", gap: 5, paddingHorizontal: 6 }}>
-          <Text style={s.muted}>{duration(minutes)}</Text>
+        <View style={{ alignItems: "center", gap: 7, paddingHorizontal: 4 }}>
+          <Text style={[s.muted, { fontSize: 11 }]}>{duration(minutes)}</Text>
           <View
             style={{ height: 1, width: 48, backgroundColor: colors.line }}
           />
@@ -77,11 +107,16 @@ export function RouteCard({
               : `${transfers} transfer${transfers > 1 ? "s" : ""}`}
           </Text>
         </View>
-        <View style={{ flex: 1, alignItems: "flex-end" }}>
-          <Text style={[s.sectionTitle, { fontSize: 18 }]}>
+        <View style={{ flex: 1, alignItems: "flex-end", gap: 5 }}>
+          <Text style={[s.sectionTitle, { fontSize: 20, fontWeight: "500" }]}>
             {route.arrivalTime}
           </Text>
-          <Text style={[s.muted, { textAlign: "right", fontSize: 11 }]}>
+          <Text
+            style={[
+              s.muted,
+              { textAlign: "right", fontSize: 11, lineHeight: 18 },
+            ]}
+          >
             {route.arrivalTerminal}
           </Text>
         </View>
@@ -92,34 +127,53 @@ export function RouteCard({
           desktop
             ? {
                 alignItems: "flex-end",
-                gap: 6,
+                gap: 10,
                 flex: 0.9,
-                paddingLeft: 20,
+                paddingLeft: 22,
                 borderLeftWidth: 1,
                 borderColor: colors.line,
               }
             : s.between,
         ]}
       >
-        <View>
-          <Text style={[s.price, { textAlign: desktop ? "right" : "left" }]}>
+        <View style={{ gap: 4 }}>
+          <Text
+            style={[
+              s.price,
+              {
+                fontSize: 28,
+                fontWeight: "500",
+                textAlign: desktop ? "right" : "left",
+              },
+            ]}
+          >
             {fare(price * passengers)} <Text style={s.muted}>total</Text>
           </Text>
           <Text
             style={[
               s.muted,
-              { fontSize: 11, textAlign: desktop ? "right" : "left" },
+              { fontSize: 10, textAlign: desktop ? "right" : "left" },
             ]}
           >
             {fare(price)} / traveler · {passengers} adult
             {passengers > 1 ? "s" : ""}
           </Text>
         </View>
-        <View style={[s.row, { gap: 5 }]}>
-          <Text style={{ fontSize: 12, fontWeight: "600", color: colors.blue }}>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 7,
+            alignItems: "center",
+            backgroundColor: colors.pale,
+            paddingVertical: 9,
+            paddingHorizontal: 11,
+            borderRadius: radius.small,
+          }}
+        >
+          <Text style={{ fontSize: 11, fontWeight: "500", color: colors.navy }}>
             View route
           </Text>
-          <Icon name="arrow-forward" color={colors.blue} size={15} />
+          <Icon name="arrow-forward" color={colors.blue} size={14} />
         </View>
       </View>
     </Pressable>

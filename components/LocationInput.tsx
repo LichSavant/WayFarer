@@ -4,6 +4,7 @@ import { Location } from "../types/location";
 import { suggestLocations } from "../data/locations";
 import { colors, Icon, s } from "./ui";
 import { glass, radius } from "./theme";
+import { ClearGlassEffect } from "./glass/ClearGlassEffect";
 import { GlassSurface } from "./glass/GlassSurface";
 export function LocationInput({
   label,
@@ -109,6 +110,14 @@ export function LocationInput({
                   alignItems: "center",
                 })}
               >
+                {i === active && (
+                  <ClearGlassEffect
+                    borderRadius={radius.small}
+                    distortionScale={-40}
+                    displace={0.5}
+                    refraction={false}
+                  />
+                )}
                 <Icon
                   name={
                     location.type === "airport"

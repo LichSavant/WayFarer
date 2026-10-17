@@ -1,76 +1,83 @@
 ﻿import { useState } from "react";
 import { Modal, Pressable, Switch, Text, View } from "react-native";
+import { EditorialBanner } from "../../components/EditorialBanner";
+import { GlassPanel } from "../../components/glass/GlassPanel";
+import { glass } from "../../components/theme";
+import { ProfileSummary } from "../../components/ProfileSummary";
+import { useResponsive } from "../../hooks/useResponsive";
 import { User } from "../../types/user";
 import { Page, s, Icon, colors, Button } from "../../components/ui";
 const user: User = { name: "Alex Traveler", initials: "AT", currency: "PHP" };
 export default function Profile() {
+  const { wide } = useResponsive();
   const [section, setSection] = useState<string | null>(null);
   const [notifications, setNotifications] = useState(true);
   const [preference, setPreference] = useState("Best value");
   return (
-    <Page style={{ maxWidth: 850 }}>
-      <Text style={s.eyebrow}>YOUR LITTLE CORNER</Text>
-      <Text style={s.title}>Profile</Text>
-      <View style={{ alignItems: "center", paddingVertical: 20, gap: 10 }}>
-        <View
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            backgroundColor: "#E4E9E5",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ fontSize: 27, fontWeight: "600", color: colors.navy }}>
-            {user.initials}
-          </Text>
+    <Page>
+      <EditorialBanner
+        eyebrow="04 / YOUR LITTLE CORNER"
+        title="Every journey starts with you."
+        subtitle="Your details, your preferences, your way there."
+        image="coast"
+      />
+      <View
+        style={{
+          flexDirection: wide ? "row" : "column",
+          gap: 28,
+          alignItems: "flex-start",
+        }}
+      >
+        <View style={{ width: wide ? 320 : "100%" }}>
+          <ProfileSummary user={user} />
         </View>
-        <Text style={s.sectionTitle}>{user.name}</Text>
-        <Text style={s.muted}>Always up for a new way there.</Text>
-      </View>
-      <View style={s.card}>
-        {[
-          "Personal information",
-          "Travel preferences",
-          "Notifications",
-          "Currency",
-          "Help",
-          "About WayFarer",
-        ].map((label, i) => (
-          <View key={label}>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => setSection(label)}
-              style={({ pressed }) => [
-                s.between,
-                { paddingVertical: 10, opacity: pressed ? 0.6 : 1 },
-              ]}
-            >
-              <View style={[s.row, { flex: 1 }]}>
-                <Icon
-                  name={
-                    (
-                      [
-                        "person-outline",
-                        "options-outline",
-                        "notifications-outline",
-                        "cash-outline",
-                        "help-circle-outline",
-                        "information-circle-outline",
-                      ] as const
-                    )[i]
-                  }
-                  size={20}
-                />
-                <Text style={s.body}>{label}</Text>
-              </View>
-              {label === "Currency" && <Text style={s.muted}>PHP ₱ </Text>}
-              <Icon name="chevron-forward" size={16} color={colors.muted} />
-            </Pressable>
-            {i < 5 && <View style={s.line} />}
-          </View>
-        ))}
+        <GlassPanel
+          tone="light"
+          blur={false}
+          style={{ padding: 24, flex: 1, width: wide ? undefined : "100%" }}
+        >
+          {[
+            "Personal information",
+            "Travel preferences",
+            "Notifications",
+            "Currency",
+            "Help",
+            "About WayFarer",
+          ].map((label, i) => (
+            <View key={label}>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => setSection(label)}
+                style={({ pressed }) => [
+                  s.between,
+                  { paddingVertical: 16, opacity: pressed ? 0.6 : 1 },
+                ]}
+              >
+                <View style={[s.row, { flex: 1 }]}>
+                  <Icon
+                    name={
+                      (
+                        [
+                          "person-outline",
+                          "options-outline",
+                          "notifications-outline",
+                          "cash-outline",
+                          "help-circle-outline",
+                          "information-circle-outline",
+                        ] as const
+                      )[i]
+                    }
+                    size={20}
+                  />
+                  <Text style={s.body}>{label}</Text>
+                </View>
+                {label === "Currency" && <Text style={s.muted}>PHP ₱ </Text>}
+                <Icon name="chevron-forward" size={16} color={colors.muted} />
+              </Pressable>
+              {i < 5 && <View style={s.line} />}
+            </View>
+          ))}
+        </GlassPanel>
       </View>
       <Text style={[s.muted, { textAlign: "center", fontSize: 11 }]}>
         WayFarer · Version 1.0.0{String.fromCharCode(10)}Built for curious souls
@@ -86,17 +93,19 @@ export default function Profile() {
           style={{
             flex: 1,
             padding: 28,
-            backgroundColor: "#152C3B66",
+            backgroundColor: glass.scrim,
             justifyContent: "center",
           }}
         >
-          <View style={s.card}>
+          <GlassPanel tone="light" style={{ width: "100%", maxWidth: 540 }}>
             <Text style={s.sectionTitle}>{section}</Text>
             {section === "Notifications" ? (
               <View style={s.between}>
                 <Text style={s.body}>Trip reminders (demo)</Text>
                 <Switch
                   accessibilityLabel="Trip reminders"
+                  trackColor={{ false: colors.line, true: colors.blue }}
+                  thumbColor={colors.white}
                   value={notifications}
                   onValueChange={setNotifications}
                 />
@@ -128,7 +137,7 @@ export default function Profile() {
               </Text>
             )}
             <Button title="Done" onPress={() => setSection(null)} />
-          </View>
+          </GlassPanel>
         </View>
       </Modal>
     </Page>

@@ -2,6 +2,7 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Page, Icon, s, EmptyState, Button, colors } from "../components/ui";
+import { EditorialBanner } from "../components/EditorialBanner";
 import { FilterChip } from "../components/FilterChip";
 import { RouteCard } from "../components/RouteCard";
 import { RecommendationsSection } from "../components/RecommendationsSection";
@@ -74,16 +75,20 @@ export default function Results() {
         <Icon name="arrow-back" size={17} />
         <Text style={s.muted}>Edit search</Text>
       </Pressable>
-      <View style={{ gap: 10 }}>
-        <Text style={s.eyebrow}>A GOOD JOURNEY STARTS WITH A CHOICE</Text>
-        <Text style={[s.title, { fontSize: wide ? 42 : 30 }]}>
-          {itinerary.origin.replace(" City", "")} → {itinerary.destination}
-        </Text>
-        <Text style={s.muted}>
-          {formatDate(itinerary.date)} · {itinerary.passengers} traveler
-          {itinerary.passengers > 1 ? "s" : ""} · One way
-        </Text>
-      </View>
+      <EditorialBanner
+        eyebrow="01 / FIND YOUR WAY"
+        title={
+          itinerary.origin.replace(" City", "") + " → " + itinerary.destination
+        }
+        subtitle={
+          formatDate(itinerary.date) +
+          " · " +
+          itinerary.passengers +
+          " traveler" +
+          (itinerary.passengers > 1 ? "s" : "") +
+          " · One way"
+        }
+      />
       <SearchProgress
         visible={searching}
         origin={request.origin}

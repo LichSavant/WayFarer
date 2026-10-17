@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Page, colors, Icon, s, SectionHeader } from "../../components/ui";
+import { SiteFooter } from "../../components/SiteFooter";
 import { DestinationHero } from "../../components/hero/DestinationHero";
 import { PopularRouteCard } from "../../components/PopularRouteCard";
 import { popularRoutes } from "../../data/popularRoutes";
@@ -92,10 +93,7 @@ export default function Explore() {
             </View>
           </View>
         </View>
-        <Text style={[s.muted, { fontSize: 11, textAlign: "center" }]}>
-          WayFarer · Made for the journey between the islands. All fares and
-          schedules are mock data.
-        </Text>
+        <SiteFooter />
       </View>
     </Page>
   );

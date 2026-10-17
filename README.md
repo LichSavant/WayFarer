@@ -110,3 +110,25 @@ The hero has one major backdrop blur. Embedded search, micro controls, destinati
 Strict TypeScript and existing functional tests pass. A React Native Web server-render smoke check confirms emission of both blur properties and no nested blur for embedded/micro surfaces. Production web bundling is checked separately.
 
 Visual browser checks at 1440, 1280, 1024, 768 and mobile widths remain pending because no connected browser was available. Confirm glass/contrast/focus behavior in Chrome and Safari, test native fallbacks on physical devices, and add verified destination-specific photography/mappings. No backend, APIs, authentication or payment integration was added.
+
+## Sitewide visual extension
+
+Results, route details, Saved, Trips and Profile now share photo-led editorial banners and the existing glass language. Reusable `EditorialBanner`, `FareSummary`, `ProfileSummary` and `SiteFooter` components coordinate the presentation without changing the route service or ranking. Trips uses a split photo/timeline journey pass; Profile uses a photo identity panel beside settings on larger screens. Comparison cards have provider emblems, recommendation accents and clearer total fares. Shared buttons use the pale-aqua accent, and filters retain their selection behavior with restrained squared shapes. Booking dialogs and settings panels use matching glass treatments.
+
+Existing functionality and the Expo stack are preserved. New imagery is not fetched: this pass reuses the three bundled editorial photos. Banners use a stronger centralized tint for readable white text. Native layouts stack the desktop columns. Visual breakpoint/browser and device QA remains pending because this session has no connected browser.
+
+## Clear-glass landing reference
+
+The landing page now follows the supplied editorial reference more closely: an inset clear frame, sharp full-bleed photography, compact left-aligned heading and route sketch, a small next-image preview, and restrained slide controls. Search remains visible and functional at the bottom of the frame. Desktop uses an 86%-wide frame; mobile keeps the stacked form.
+
+`components/glass/ClearGlassSurface.tsx` supports `width`, `height`, `borderRadius`, `distortionScale`, `displace` and `backgroundOpacity`. The landing frame uses a 2.5% white tint with no full-panel blur. `ClearGlassEffect.web.tsx` applies SVG displacement through a narrow masked edge, with a CSS feature check and a slight edge-blur fallback. The clear center is never backdrop-blurred. Native builds use the shared transparent surface and reflective border; DOM/SVG filters are isolated to the web module. The provided usage snippet did not include its original component implementation; this is a local compatible implementation, without the unused custom-shape or external-backdrop API.
+
+Photography stays sharp; contrast is localized behind the left content rather than added to the entire frame. Existing dark dropdowns and dialogs remain for readability. Web/Safari optical effects still need real-browser visual QA; CSS syntax support does not guarantee identical rendering across browser engines. No additional packages or transport APIs were added.
+
+## React Bits renderer and glass controls
+
+The full React Bits GlassSurface JavaScript and CSS supplied in the integration brief are now vendored under `components/vendor/react-bits/`, with a TypeScript declaration boundary. This replaces the earlier custom approximate edge renderer. `ClearGlassEffect.web.tsx` uses the supplied renderer; `HeroBackdrop.web.tsx` supplies the actual hero HTML image ref so the component can use WebGL outside Chromium. The native fallback remains separate.
+
+Shared buttons, result filter chips, selected autocomplete options, the swap control, and date/traveler choices use the React Bits glass treatment. Selected filters and picker choices retain explicit aqua highlights and accessibility selection state. Full refraction is reserved for the main photographic frame; smaller controls and the preview use the component's lighter frosted mode. Decorative surfaces ignore pointer input and leave the existing React Native controls responsible for keyboard, focus, and click behavior.
+
+Added `expo-asset` as a direct dependency (installed from the local cache) to resolve bundled hero images consistently into an HTML image source. Other app architecture and mock travel behavior are unchanged. Exact Chromium/Safari/Firefox optics still need browser QA: no browser is connected to this session. Shape, SVG, WebGL and fallback capabilities remain in the supplied vendor source; only the needed application presets are used.

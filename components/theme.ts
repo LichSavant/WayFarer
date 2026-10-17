@@ -15,6 +15,7 @@ export const shadow = {
 };
 export const glass = {
   dark: "rgba(7,27,36,0.30)",
+  readableDark: "rgba(7,27,36,0.54)",
   darkStrong: "rgba(7,27,36,0.86)",
   light: "rgba(255,255,255,0.70)",
   lightStrong: "rgba(255,255,255,0.86)",

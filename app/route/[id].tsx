@@ -3,6 +3,10 @@ import { Pressable, Share, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Page, Button, Icon, s, colors, EmptyState } from "../../components/ui";
+import { EditorialBanner } from "../../components/EditorialBanner";
+import { FareSummary } from "../../components/FareSummary";
+import { GlassPanel } from "../../components/glass/GlassPanel";
+import { glass } from "../../components/theme";
 import { RouteTimeline } from "../../components/RouteTimeline";
 import { TransportBadge } from "../../components/TransportBadge";
 import { BookingModal } from "../../components/BookingModal";
@@ -75,16 +79,19 @@ export default function Details() {
           <Icon name="arrow-back" size={17} />
           <Text style={s.muted}>Back to routes</Text>
         </Pressable>
-        <View style={{ gap: 10 }}>
-          <Text style={s.eyebrow}>YOUR WAY THERE</Text>
-          <Text style={[s.title, { fontSize: wide ? 42 : 30 }]}>
-            {route.origin} → {route.destination}
-          </Text>
-          <Text style={s.muted}>
-            {formatDate(date)} · {passengers} traveler
-            {passengers > 1 ? "s" : ""} · {duration(route.totalDurationMinutes)}
-          </Text>
-        </View>
+        <EditorialBanner
+          eyebrow="YOUR WAY / THE ITINERARY"
+          title={route.origin + " → " + route.destination}
+          subtitle={
+            formatDate(date) +
+            " · " +
+            passengers +
+            " traveler" +
+            (passengers > 1 ? "s" : "") +
+            " · " +
+            duration(route.totalDurationMinutes)
+          }
+        />
         <View
           style={{
             flexDirection: wide ? "row" : "column",
@@ -92,9 +99,10 @@ export default function Details() {
             alignItems: "flex-start",
           }}
         >
-          <View
+          <GlassPanel
+            tone="light"
+            blur={false}
             style={[
-              s.card,
               {
                 flex: wide ? 1.6 : undefined,
                 width: wide ? undefined : "100%",
@@ -108,33 +116,9 @@ export default function Details() {
             </View>
             <View style={s.line} />
             <RouteTimeline route={route} />
-          </View>
+          </GlassPanel>
           <View style={{ flex: 1, width: wide ? undefined : "100%", gap: 22 }}>
-            <View style={s.card}>
-              <Text style={s.eyebrow}>FARE BREAKDOWN</Text>
-              <Text style={s.price}>
-                {fare(route.pricePerTraveler * passengers)}{" "}
-                <Text style={s.muted}>total</Text>
-              </Text>
-              <Text style={s.muted}>
-                {fare(route.pricePerTraveler)} / traveler × {passengers} adult
-                {passengers > 1 ? "s" : ""}
-              </Text>
-              <View style={s.line} />
-              <Text style={s.body}>
-                Booking provider: {route.bookingProvider}
-              </Text>
-              <Text style={s.muted}>
-                {duration(route.totalDurationMinutes)} end to end ·{" "}
-                {route.transferCount === 0
-                  ? "Direct service"
-                  : `${route.transferCount} transfers`}
-              </Text>
-              <Text style={[s.muted, { fontSize: 11 }]}>
-                Estimated mock fare. Confirm final prices and inclusions with
-                the provider.
-              </Text>
-            </View>
+            <FareSummary route={route} travelers={passengers} />
             <View style={{ gap: 15 }}>
               <Text style={s.sectionTitle}>Good to know</Text>
               {[
@@ -190,7 +174,7 @@ export default function Details() {
       <SafeAreaView
         edges={["bottom"]}
         style={{
-          backgroundColor: "white",
+          backgroundColor: colors.navy,
           borderTopWidth: 1,
           borderColor: colors.line,
         }}
@@ -209,10 +193,10 @@ export default function Details() {
         >
           {wide && (
             <View>
-              <Text style={s.price}>
+              <Text style={[s.price, { color: glass.text }]}>
                 {fare(route.pricePerTraveler * passengers)}
               </Text>
-              <Text style={s.muted}>
+              <Text style={[s.muted, { color: glass.dim }]}>
                 Estimated total · {passengers} traveler
                 {passengers > 1 ? "s" : ""}
               </Text>

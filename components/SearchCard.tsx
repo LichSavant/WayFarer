@@ -6,12 +6,13 @@ import { toTravelRequest } from "../services/travel/adapters";
 import { useResponsive } from "../hooks/useResponsive";
 import { Icon, s } from "./ui";
 import { glass, radius } from "./theme";
+import { ClearGlassEffect } from "./glass/ClearGlassEffect";
 import { GlassSurface } from "./glass/GlassSurface";
 import { GlassPanel } from "./glass/GlassPanel";
 import { GlassButton } from "./glass/GlassButton";
 import { LocationInput } from "./LocationInput";
 import { SearchProgress } from "./SearchProgress";
-export function SearchCard() {
+export function SearchCard({ clear = false }: { clear?: boolean }) {
   const { search, setSearch, runSearch, searching, searchError } = useTravel();
   const { desktop } = useResponsive();
   const [picker, setPicker] = useState<"date" | "passengers" | null>(null);
@@ -31,8 +32,25 @@ export function SearchCard() {
       <GlassSurface
         level="functional"
         blur={false}
-        style={{ padding: desktop ? 22 : 18, gap: 18 }}
+        style={{
+          padding: desktop ? 20 : 18,
+          gap: 18,
+          ...(clear
+            ? {
+                backgroundColor: "rgba(4,23,31,.08)",
+                borderColor: "rgba(255,255,255,.40)",
+              }
+            : {}),
+        }}
       >
+        {clear && (
+          <ClearGlassEffect
+            borderRadius={14}
+            distortionScale={-40}
+            refraction={false}
+            displace={0.5}
+          />
+        )}
         <View style={[s.between, { gap: 10 }]}>
           <Text style={{ fontSize: 9, letterSpacing: 1.6, color: glass.muted }}>
             YOUR JOURNEY · ONE WAY
@@ -86,6 +104,12 @@ export function SearchCard() {
                 zIndex: 5,
               })}
             >
+              <ClearGlassEffect
+                borderRadius={radius.small}
+                distortionScale={-45}
+                displace={0.5}
+                refraction={false}
+              />
               <Icon
                 name={desktop ? "swap-horizontal" : "swap-vertical"}
                 size={18}
@@ -219,6 +243,17 @@ export function SearchCard() {
               ).map((value) => (
                 <GlassButton
                   key={value}
+                  primary={
+                    typeof value === "string"
+                      ? value === search.date
+                      : value === search.passengers
+                  }
+                  accessibilityState={{
+                    selected:
+                      typeof value === "string"
+                        ? value === search.date
+                        : value === search.passengers,
+                  }}
                   title={
                     typeof value === "string"
                       ? formatDate(value)

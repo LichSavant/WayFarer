@@ -1,9 +1,16 @@
-﻿import { useState } from "react";
-import { Pressable, Text, ViewStyle, StyleProp } from "react-native";
+﻿import { useState, ComponentProps } from "react";
+import {
+  Pressable,
+  Text,
+  ViewStyle,
+  StyleProp,
+  AccessibilityState,
+  StyleSheet,
+} from "react-native";
 import { colors, glass, radius } from "../theme";
 import { Icon } from "../Icon";
-import { glassStyle, GlassTone } from "./styles";
-import { ComponentProps } from "react";
+import { ClearGlassEffect } from "./ClearGlassEffect";
+import { GlassTone } from "./styles";
 export function GlassButton({
   title,
   icon,
@@ -13,6 +20,7 @@ export function GlassButton({
   style,
   accessibilityLabel,
   disabled = false,
+  accessibilityState,
 }: {
   title?: string;
   icon?: ComponentProps<typeof Icon>["name"];
@@ -22,44 +30,61 @@ export function GlassButton({
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
   disabled?: boolean;
+  accessibilityState?: AccessibilityState;
 }) {
   const [hover, setHover] = useState(false);
+  const suppliedRadius = StyleSheet.flatten(style)?.borderRadius;
+  const curve =
+    typeof suppliedRadius === "number" ? suppliedRadius : radius.medium;
   const text = primary || tone === "light" ? colors.navy : glass.text;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
-      accessibilityState={{ disabled }}
+      accessibilityState={{ ...accessibilityState, disabled }}
       disabled={disabled}
       onPress={onPress}
       onHoverIn={() => setHover(true)}
       onHoverOut={() => setHover(false)}
       style={({ pressed }) => [
-        glassStyle("micro", tone, false),
         {
+          position: "relative",
           minHeight: 48,
           paddingVertical: 13,
           paddingHorizontal: title ? 20 : 14,
-          borderRadius: radius.small,
+          borderRadius: curve,
+          borderWidth: 1,
+          borderColor: hover
+            ? glass.highlight
+            : tone === "light"
+              ? glass.borderStrong
+              : glass.border,
           flexDirection: "row",
           gap: 10,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: primary
-            ? colors.aqua
-            : hover
-              ? glass.hover
-              : tone === "dark"
-                ? glass.dark
-                : glass.light,
-          borderColor: hover ? glass.highlight : glass.border,
+            ? "rgba(189,239,242,0.60)"
+            : tone === "light"
+              ? "rgba(255,255,255,0.28)"
+              : "rgba(255,255,255,0.045)",
           opacity: disabled ? 0.5 : pressed ? 0.75 : 1,
         },
         style,
       ]}
     >
+      <ClearGlassEffect
+        borderRadius={curve}
+        distortionScale={-60}
+        displace={0.5}
+        backgroundOpacity={hover ? 0.18 : 0.08}
+        refraction={false}
+        tone={primary ? "light" : tone}
+      />
       {title && (
-        <Text style={{ color: text, fontSize: 14, fontWeight: "600" }}>
+        <Text
+          style={{ color: text, fontSize: 14, fontWeight: "600", zIndex: 1 }}
+        >
           {title}
         </Text>
       )}
