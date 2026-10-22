@@ -1,4 +1,4 @@
-﻿import { GlassButton } from "./glass/GlassButton";
+import { GlassButton } from "./glass/GlassButton";
 export function FilterChip({
   label,
   selected,
@@ -21,8 +21,8 @@ export function FilterChip({
         paddingVertical: 10,
         ...(selected
           ? {
-              borderColor: "#7ABDC6",
-              backgroundColor: "rgba(189,239,242,0.65)",
+              borderColor: "#191919",
+              backgroundColor: "#191919",
             }
           : {}),
       }}

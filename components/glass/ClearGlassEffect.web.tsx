@@ -1,16 +1,13 @@
-﻿import ReactBitsGlassSurface from "../vendor/react-bits/GlassSurface";
-import { useGlassBackdrop } from "./HeroBackdrop";
 import type { ClearGlassEffectProps } from "./ClearGlassEffect";
-/** Real React Bits renderer. Full refraction is reserved for large photographic surfaces. */
+
+/** Static optical highlights: no canvas, frame loop, SVG filter, or backdrop capture. */
 export function ClearGlassEffect({
   borderRadius,
-  distortionScale,
-  displace,
   backgroundOpacity = 0.08,
   refraction = true,
+  frosted = false,
   tone = "dark",
 }: ClearGlassEffectProps) {
-  const backdrop = useGlassBackdrop();
   return (
     <div
       aria-hidden="true"
@@ -19,33 +16,14 @@ export function ClearGlassEffect({
         inset: 0,
         borderRadius,
         pointerEvents: "none",
-        overflow: "hidden",
+        backdropFilter: frosted ? "blur(24px) saturate(115%)" : undefined,
+        WebkitBackdropFilter: frosted ? "blur(24px) saturate(115%)" : undefined,
+        background: `linear-gradient(135deg, rgba(255,255,255,${Math.min(backgroundOpacity + 0.12, 0.35)}) 0%, rgba(255,255,255,0.015) 48%, rgba(189,239,242,0.07) 100%)`,
+        boxShadow: refraction
+          ? "inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(255,255,255,0.16)"
+          : "inset 0 1px 0 rgba(255,255,255,0.32)",
+        colorScheme: tone === "dark" ? "dark" : "light",
       }}
-    >
-      <ReactBitsGlassSurface
-        width="100%"
-        height="100%"
-        borderRadius={borderRadius}
-        distortionScale={distortionScale}
-        displace={displace}
-        backgroundOpacity={backgroundOpacity}
-        refraction={refraction}
-        backdrop={refraction ? backdrop : undefined}
-        borderWidth={0.09}
-        blur={9}
-        opacity={0.98}
-        redOffset={0}
-        greenOffset={3}
-        blueOffset={6}
-        saturation={1.12}
-        className="wayfarer-liquid"
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          colorScheme: tone === "dark" ? "dark" : "light",
-        }}
-      />
-    </div>
+    />
   );
 }

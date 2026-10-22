@@ -132,3 +132,10 @@ The full React Bits GlassSurface JavaScript and CSS supplied in the integration 
 Shared buttons, result filter chips, selected autocomplete options, the swap control, and date/traveler choices use the React Bits glass treatment. Selected filters and picker choices retain explicit aqua highlights and accessibility selection state. Full refraction is reserved for the main photographic frame; smaller controls and the preview use the component's lighter frosted mode. Decorative surfaces ignore pointer input and leave the existing React Native controls responsible for keyboard, focus, and click behavior.
 
 Added `expo-asset` as a direct dependency (installed from the local cache) to resolve bundled hero images consistently into an HTML image source. Other app architecture and mock travel behavior are unchanged. Exact Chromium/Safari/Firefox optics still need browser QA: no browser is connected to this session. Shape, SVG, WebGL and fallback capabilities remain in the supplied vendor source; only the needed application presets are used.
+
+
+## Lightweight glass performance update
+
+Active web surfaces now use static translucent gradients and inset highlights instead of the vendored SVG/WebGL renderer. This removes per-control renderer setup and the fallback continuous canvas draw loop. The vendor source is retained but is no longer imported by the application glass effect. Shared cards and panels use the same lightweight glass treatment; default backdrop blur is disabled. Explicit functional blur is capped at 6px. Native tint fallbacks remain supported. Hero images request asynchronous decoding.
+
+Validation: TypeScript, route/travel tests and production web export pass. Browser frame-rate and visual checks still require verification; no measured speedup is claimed.

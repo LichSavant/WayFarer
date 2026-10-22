@@ -1,64 +1,72 @@
-﻿import { ImageBackground, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { User } from "../types/user";
-import { GlassPanel } from "./glass/GlassPanel";
-import { colors, glass, radius } from "./theme";
-import { Icon } from "./Icon";
+import { Barcode, TicketMap } from "./ticket";
 export function ProfileSummary({ user }: { user: User }) {
   return (
-    <ImageBackground
-      source={require("../assets/destinations/palms.jpg")}
-      imageStyle={{ borderRadius: radius.large }}
+    <View
       style={{
-        borderRadius: radius.large,
-        backgroundColor: "#54757A",
-        minHeight: 350,
-        justifyContent: "flex-end",
-        padding: 18,
+        backgroundColor: "#E9DFD2",
+        borderRadius: 13,
+        borderWidth: 1,
+        borderColor: "#D8C9B7",
       }}
     >
-      <GlassPanel
-        blur={false}
-        style={{ gap: 18, backgroundColor: glass.darkStrong }}
-      >
+      <View style={{ padding: 25, gap: 24 }}>
+        <TicketMap />
+        <Text
+          style={{
+            fontSize: 8,
+            fontWeight: "700",
+            letterSpacing: 2.5,
+            color: "#8C7762",
+          }}
+        >
+          YOUR WORLD / YOUR WAY
+        </Text>
         <View
           style={{
-            width: 64,
-            height: 64,
-            borderRadius: 32,
-            borderWidth: 1,
-            borderColor: glass.highlight,
+            width: 74,
+            height: 74,
+            borderRadius: 40,
+            backgroundColor: "#CBB69F",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: "500", color: colors.aqua }}>
+          <Text style={{ fontSize: 26, fontWeight: "500", color: "#4D3C2C" }}>
             {user.initials}
           </Text>
         </View>
-        <View style={{ gap: 6 }}>
+        <View style={{ gap: 7 }}>
           <Text
             style={{
-              fontSize: 25,
-              lineHeight: 32,
-              letterSpacing: -0.6,
+              fontSize: 27,
               fontWeight: "500",
-              color: glass.text,
+              letterSpacing: -1,
+              color: "#32271D",
             }}
           >
             {user.name}
           </Text>
-          <Text style={{ fontSize: 12, lineHeight: 20, color: glass.dim }}>
-            Always up for a new way there.
+          <Text style={{ fontSize: 11, color: "#8B7661" }}>
+            Always open to a new horizon.
           </Text>
         </View>
-        <View style={{ height: 1, backgroundColor: glass.separator }} />
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <Icon name="compass-outline" color={colors.aqua} size={16} />
-          <Text style={{ fontSize: 9, letterSpacing: 1.2, color: glass.dim }}>
-            THE CURIOUS TRAVELER
-          </Text>
-        </View>
-      </GlassPanel>
-    </ImageBackground>
+      </View>
+      <View
+        style={{
+          padding: 24,
+          borderTopWidth: 1,
+          borderStyle: "dashed",
+          borderColor: "#CBB8A3",
+          gap: 10,
+        }}
+      >
+        <Barcode height={35} />
+        <Text style={{ fontSize: 8, letterSpacing: 2, color: "#8A7560" }}>
+          PASSENGER / {user.initials} / {user.currency}
+        </Text>
+      </View>
+    </View>
   );
 }

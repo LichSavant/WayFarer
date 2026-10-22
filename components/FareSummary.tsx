@@ -1,8 +1,9 @@
-﻿import { Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { JourneyRoute } from "../types/travel";
 import { duration, fare } from "../data/routes";
 import { GlassPanel } from "./glass/GlassPanel";
 import { colors, glass } from "./theme";
+import { Barcode } from "./ticket";
 import { Icon } from "./Icon";
 export function FareSummary({
   route,
@@ -44,7 +45,13 @@ export function FareSummary({
           {travelers} adult{travelers > 1 ? "s" : ""}
         </Text>
       </View>
-      <View style={{ height: 1, backgroundColor: glass.separator }} />
+      <View
+        style={{
+          borderTopWidth: 1,
+          borderStyle: "dashed",
+          borderColor: glass.separator,
+        }}
+      />
       <View style={{ gap: 8 }}>
         <Text style={{ fontSize: 14, color: glass.text }}>
           Continue with {route.bookingProvider}
@@ -60,6 +67,7 @@ export function FareSummary({
         Estimated mock fare. Confirm final prices and inclusions with the
         provider.
       </Text>
+      <Barcode height={28} />
     </GlassPanel>
   );
 }

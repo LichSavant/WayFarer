@@ -1,43 +1,23 @@
-﻿import { Platform, ViewStyle } from "react-native";
-import { glass, radius, shadow } from "../theme";
+import { ViewStyle } from "react-native";
+import { colors, radius } from "../theme";
 export type GlassLevel = "structural" | "functional" | "micro";
 export type GlassTone = "dark" | "light";
-/** The only web-specific style boundary; native receives a readable tint fallback. */
-type WebGlassStyle = ViewStyle & {
-  backdropFilter?: string;
-  WebkitBackdropFilter?: string;
-};
+/** Shared paper surface for ticket cards, dialogs, and controls. */
 export function glassStyle(
   level: GlassLevel,
-  tone: GlassTone,
-  blur = true,
-): WebGlassStyle {
-  const dark = tone === "dark";
-  const amount = glass.blur[level];
-  const web: WebGlassStyle = {
-    backgroundColor: dark ? glass.dark : glass.light,
-    ...(blur && amount > 0
-      ? {
-          backdropFilter: `blur(${amount}px)`,
-          WebkitBackdropFilter: `blur(${amount}px)`,
-        }
-      : {}),
-    ...(level === "structural" ? { boxShadow: shadow.elevated } : {}),
-  };
+  _tone: GlassTone,
+  _blur = false,
+): ViewStyle {
   return {
+    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: dark ? glass.border : glass.borderStrong,
+    borderColor: colors.line,
     borderRadius:
       level === "structural"
-        ? radius.hero
+        ? radius.large
         : level === "functional"
           ? radius.medium
           : radius.small,
-    ...Platform.select({
-      web,
-      default: {
-        backgroundColor: dark ? glass.native.dark : glass.native.light,
-      },
-    }),
+    boxShadow: "0 6px 24px rgba(54,37,22,0.04)",
   };
 }

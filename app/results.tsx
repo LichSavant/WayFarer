@@ -165,6 +165,7 @@ export default function Results() {
               <RouteCard
                 key={route.id}
                 route={route}
+                date={itinerary.date}
                 passengers={itinerary.passengers}
                 recommendation={picks
                   .filter((p) => p.option.id === route.id)

@@ -21,6 +21,8 @@ export function HeroPhoto({ source }: { source: ImageSourcePropType }) {
       alt=""
       aria-hidden="true"
       draggable={false}
+      decoding="async"
+      fetchPriority="high"
       style={{
         position: "absolute",
         inset: 0,

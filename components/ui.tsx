@@ -14,6 +14,8 @@ import { SiteFooter } from "./SiteFooter";
 import { useResponsive } from "../hooks/useResponsive";
 import { colors, radius, layout } from "./theme";
 import { Icon } from "./Icon";
+import { AmbientBackdrop } from "./AmbientBackdrop";
+import { glassStyle } from "./glass/styles";
 export { colors } from "./theme";
 export { Icon } from "./Icon";
 export function Button({
@@ -46,23 +48,43 @@ export function Page({
   style?: ViewStyle;
   immersive?: boolean;
 }) {
-  const { wide } = useResponsive();
+  const { wide, gutter } = useResponsive();
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1, backgroundColor: "#302820" }}
     >
-      {!immersive && <SiteHeader />}
+      <AmbientBackdrop />
       <ScrollView
-        contentContainerStyle={[
-          immersive ? { width: "100%" } : s.page,
-          !immersive && { padding: wide ? 32 : 20 },
-          style,
-        ]}
+        contentContainerStyle={{ width: "100%", minHeight: "100%" }}
         keyboardShouldPersistTaps="handled"
       >
-        {children}
-        {!immersive && <SiteFooter />}
+        <SiteHeader />
+        <View
+          style={[
+            s.page,
+            { paddingHorizontal: gutter, paddingTop: wide ? 32 : 20 },
+            style,
+          ]}
+        >
+          <View
+            style={
+              immersive
+                ? undefined
+                : {
+                    backgroundColor: "rgba(245,239,231,0.97)",
+                    borderRadius: 16,
+                    padding: wide ? 28 : 16,
+                    gap: 26,
+                    borderWidth: 1,
+                    borderColor: "rgba(255,255,255,0.35)",
+                  }
+            }
+          >
+            {children}
+          </View>
+          <SiteFooter />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -93,7 +115,7 @@ export function EmptyState({ title, body }: { title: string; body: string }) {
 export const s = StyleSheet.create({
   page: {
     width: "100%",
-    maxWidth: layout.contentMax,
+    maxWidth: 1440,
     alignSelf: "center",
     padding: 24,
     paddingBottom: 40,
@@ -126,7 +148,7 @@ export const s = StyleSheet.create({
     justifyContent: "space-between",
   },
   card: {
-    backgroundColor: "#FAFBF8",
+    ...glassStyle("functional", "light", false),
     borderRadius: radius.medium,
     padding: 20,
     borderWidth: 1,

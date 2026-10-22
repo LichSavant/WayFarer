@@ -9,7 +9,7 @@ export interface GlassSurfaceProps extends ViewProps {
 export function GlassSurface({
   level = "functional",
   tone = "dark",
-  blur = true,
+  blur = false,
   style,
   ...props
 }: GlassSurfaceProps) {

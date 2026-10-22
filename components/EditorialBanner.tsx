@@ -1,97 +1,87 @@
-﻿import React from "react";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import { GlassPanel } from "./glass/GlassPanel";
+import React from "react";
+import { Text, View } from "react-native";
 import { useResponsive } from "../hooks/useResponsive";
-import { glass, radius } from "./theme";
-import { Icon } from "./Icon";
-const images = {
-  islands: require("../assets/destinations/islands.jpg"),
-  coast: require("../assets/destinations/coast.jpg"),
-  sunset: require("../assets/destinations/palms.jpg"),
-};
+import { Barcode, TicketMap } from "./ticket";
 export function EditorialBanner({
   eyebrow,
   title,
   subtitle,
-  image = "islands",
   children,
 }: {
   eyebrow: string;
   title: string;
   subtitle: string;
-  image?: keyof typeof images;
+  image?: "islands" | "coast" | "sunset";
   children?: React.ReactNode;
 }) {
   const { wide } = useResponsive();
   return (
-    <ImageBackground
-      source={images[image]}
-      imageStyle={{ borderRadius: radius.large }}
+    <View
       style={{
-        backgroundColor: "#45666A",
-        borderRadius: radius.large,
-        padding: wide ? 30 : 16,
-        minHeight: wide ? 290 : 240,
-        justifyContent: "flex-end",
+        flexDirection: wide ? "row" : "column",
+        borderBottomWidth: 1,
+        borderColor: "#D2C1AF",
+        borderStyle: "dashed",
+        paddingBottom: 28,
+        marginBottom: 4,
       }}
     >
-      <View
-        pointerEvents="none"
-        style={[
-          StyleSheet.absoluteFill,
-          { borderRadius: radius.large, backgroundColor: glass.overlay },
-        ]}
-      />
-      <GlassPanel
-        level="functional"
-        style={{
-          maxWidth: wide ? 740 : undefined,
-          padding: wide ? 28 : 20,
-          gap: 15,
-          backgroundColor: glass.readableDark,
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <View
-            style={{ height: 1, width: 28, backgroundColor: glass.highlight }}
-          />
-          <Text
-            style={{
-              fontSize: 9,
-              letterSpacing: 1.8,
-              fontWeight: "500",
-              color: glass.muted,
-            }}
-          >
-            {eyebrow}
-          </Text>
-        </View>
+      <View style={{ flex: 1, gap: 16, minWidth: 0 }}>
+        <TicketMap />
         <Text
           style={{
-            fontSize: wide ? 44 : 32,
-            lineHeight: wide ? 52 : 40,
-            letterSpacing: -1.4,
+            fontSize: 8,
+            letterSpacing: 3,
+            color: "#8B7967",
+            fontWeight: "700",
+          }}
+        >
+          {eyebrow}
+        </Text>
+        <Text
+          style={{
+            fontSize: wide ? 42 : 31,
+            lineHeight: wide ? 48 : 37,
+            letterSpacing: -1.8,
             fontWeight: "500",
-            color: glass.text,
+            color: "#2A231C",
           }}
         >
           {title}
         </Text>
-        <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-          <Icon name="compass-outline" size={16} color={glass.muted} />
+        <Text style={{ fontSize: 13, lineHeight: 21, color: "#83715F" }}>
+          {subtitle}
+        </Text>
+        {children}
+      </View>
+      {wide && (
+        <View
+          style={{
+            width: 130,
+            paddingLeft: 30,
+            borderLeftWidth: 1,
+            borderStyle: "dashed",
+            borderColor: "#CDBCA9",
+            gap: 12,
+            justifyContent: "center",
+          }}
+        >
           <Text
             style={{
-              fontSize: 13,
-              lineHeight: 21,
-              color: glass.muted,
-              flex: 1,
+              fontSize: 12,
+              color: "#5F4C3A",
+              letterSpacing: -0.5,
+              fontWeight: "600",
             }}
           >
-            {subtitle}
+            WayFarer
+          </Text>
+          <Barcode height={40} />
+          <Text style={{ fontSize: 7, letterSpacing: 2, color: "#8A7662" }}>
+            TRAVEL FURTHER
           </Text>
         </View>
-        {children}
-      </GlassPanel>
-    </ImageBackground>
+      )}
+    </View>
   );
 }

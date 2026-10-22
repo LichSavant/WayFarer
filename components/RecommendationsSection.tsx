@@ -1,4 +1,5 @@
-﻿import { ImageBackground, Text, View } from "react-native";
+import { useState } from "react";
+import { Text, View } from "react-native";
 import { JourneyRoute } from "../types/travel";
 import { getRecommendations } from "../utils/recommendations";
 import { RecommendationCard } from "./RecommendationCard";
@@ -12,18 +13,18 @@ interface Props {
   onSelect: (option: JourneyRoute) => void;
 }
 export function RecommendationsSection({ picks, travelers, onSelect }: Props) {
-  const { wide, columns } = useResponsive();
+  const { contentWidth, wide: viewportWide } = useResponsive();
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const availableWidth = measuredWidth ?? contentWidth - 64;
+  const columns = availableWidth >= 900 ? 3 : availableWidth >= 560 ? 2 : 1;
+  const wide = columns > 1;
   return (
-    <ImageBackground
-      source={require("../assets/destinations/islands.jpg")}
-      imageStyle={{ borderRadius: radius.large, opacity: 0.2 }}
-      style={{ backgroundColor: "#DFEAE7", borderRadius: radius.large }}
-    >
+    <View>
       <GlassSurface
         level="functional"
         tone="light"
         style={{
-          padding: wide ? 26 : 18,
+          padding: viewportWide ? 22 : 12,
           gap: 22,
           borderRadius: radius.large,
           backgroundColor: glass.environmental,
@@ -33,7 +34,7 @@ export function RecommendationsSection({ picks, travelers, onSelect }: Props) {
           <Text style={[s.eyebrow, { fontSize: 9 }]}>
             COMPARE THE POSSIBILITIES
           </Text>
-          <Text style={[s.sectionTitle, { fontSize: 28, fontWeight: "500" }]}>
+          <Text style={[s.sectionTitle, { fontSize: 28, fontWeight: "800" }]}>
             WayFarer Picks
           </Text>
           <Text style={s.muted}>
@@ -41,6 +42,7 @@ export function RecommendationsSection({ picks, travelers, onSelect }: Props) {
           </Text>
         </View>
         <View
+          onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
           style={{
             flexDirection: wide ? "row" : "column",
             flexWrap: "wrap",
@@ -60,7 +62,8 @@ export function RecommendationsSection({ picks, travelers, onSelect }: Props) {
                     : wide && pick.key !== "best"
                       ? "48%"
                       : "100%",
-                flexGrow: 1,
+                flexGrow: wide ? 1 : 0,
+                minWidth: 0,
                 paddingTop: columns === 3 && pick.key !== "best" ? 20 : 0,
               }}
             >
@@ -78,6 +81,6 @@ export function RecommendationsSection({ picks, travelers, onSelect }: Props) {
           preference for direct routes. Picks may overlap.
         </Text>
       </GlassSurface>
-    </ImageBackground>
+    </View>
   );
 }

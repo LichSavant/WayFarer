@@ -1,22 +1,27 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useTravel, formatDate } from "../store/TravelContext";
+import { useTravel } from "../store/TravelContext";
 import { toTravelRequest } from "../services/travel/adapters";
 import { useResponsive } from "../hooks/useResponsive";
-import { Icon, s } from "./ui";
-import { glass, radius } from "./theme";
-import { ClearGlassEffect } from "./glass/ClearGlassEffect";
-import { GlassSurface } from "./glass/GlassSurface";
+import { Icon } from "./Icon";
 import { GlassPanel } from "./glass/GlassPanel";
 import { GlassButton } from "./glass/GlassButton";
 import { LocationInput } from "./LocationInput";
 import { SearchProgress } from "./SearchProgress";
-export function SearchCard({ clear = false }: { clear?: boolean }) {
+import { Barcode, TicketMap } from "./ticket";
+export function SearchCard(_props: { clear?: boolean; ticket?: boolean }) {
   const { search, setSearch, runSearch, searching, searchError } = useTravel();
-  const { desktop } = useResponsive();
+  const { wide, contentWidth } = useResponsive();
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const cardWidth = measuredWidth ?? contentWidth;
+  const desktop = cardWidth >= 1100;
+  const fieldsRow =
+    (desktop ? cardWidth - 338 : cardWidth) - (wide ? 60 : 44) >= 680;
+  const fieldGap = cardWidth < 480 ? 12 : 24;
   const [picker, setPicker] = useState<"date" | "passengers" | null>(null);
   const [error, setError] = useState("");
+  const date = new Date(search.date + "T12:00:00");
   async function submit() {
     if (searching) return;
     try {
@@ -28,165 +33,288 @@ export function SearchCard({ clear = false }: { clear?: boolean }) {
     }
   }
   return (
-    <View style={{ zIndex: 20, gap: 10 }}>
-      <GlassSurface
-        level="functional"
-        blur={false}
+    <View
+      onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
+      style={{ zIndex: 30, gap: 10, minWidth: 0 }}
+    >
+      <View
         style={{
-          padding: desktop ? 20 : 18,
-          gap: 18,
-          ...(clear
-            ? {
-                backgroundColor: "rgba(4,23,31,.08)",
-                borderColor: "rgba(255,255,255,.40)",
-              }
-            : {}),
+          flexDirection: desktop ? "row" : "column",
+          minHeight: desktop ? 178 : undefined,
         }}
       >
-        {clear && (
-          <ClearGlassEffect
-            borderRadius={14}
-            distortionScale={-40}
-            refraction={false}
-            displace={0.5}
-          />
-        )}
-        <View style={[s.between, { gap: 10 }]}>
-          <Text style={{ fontSize: 9, letterSpacing: 1.6, color: glass.muted }}>
-            YOUR JOURNEY · ONE WAY
-          </Text>
-          <View style={[s.row, { gap: 10 }]}>
-            <Icon name="boat-outline" size={15} color={glass.dim} />
-            <Icon name="airplane-outline" size={15} color={glass.dim} />
-          </View>
-        </View>
         <View
           style={{
-            flexDirection: desktop ? "row" : "column",
-            alignItems: desktop ? "center" : "stretch",
-            gap: desktop ? 20 : 18,
-            zIndex: 10,
+            flex: desktop ? 1 : undefined,
+            minWidth: 0,
+            backgroundColor: "#F5F1EB",
+            borderRadius: 13,
+            paddingHorizontal: wide ? 30 : 22,
+            paddingVertical: 22,
+            zIndex: 4,
           }}
         >
+          <TicketMap />
           <View
             style={{
-              flex: desktop ? 2.1 : undefined,
-              flexDirection: desktop ? "row" : "column",
-              gap: 14,
-              zIndex: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 18,
+              marginBottom: 24,
             }}
           >
-            <LocationInput
-              inverse
-              label="From"
-              value={search.origin}
-              onChange={(origin) => setSearch((v) => ({ ...v, origin }))}
-            />
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Swap origin and destination"
-              onPress={() =>
-                setSearch((v) => ({
-                  ...v,
-                  origin: v.destination,
-                  destination: v.origin,
-                }))
-              }
-              style={({ pressed }) => ({
-                alignSelf: desktop ? "center" : "flex-end",
-                marginVertical: desktop ? 0 : -12,
-                borderWidth: 1,
-                borderColor: glass.separator,
-                padding: 10,
-                borderRadius: radius.small,
-                backgroundColor: glass.hover,
-                opacity: pressed ? 0.65 : 1,
-                zIndex: 5,
-              })}
+            <Text
+              style={{
+                fontSize: 10,
+                fontWeight: "800",
+                letterSpacing: cardWidth < 380 ? 1.5 : 3,
+                flexShrink: 1,
+              }}
             >
-              <ClearGlassEffect
-                borderRadius={radius.small}
-                distortionScale={-45}
-                displace={0.5}
-                refraction={false}
-              />
-              <Icon
-                name={desktop ? "swap-horizontal" : "swap-vertical"}
-                size={18}
-                color={glass.text}
-              />
-            </Pressable>
-            <LocationInput
-              inverse
-              label="To"
-              value={search.destination}
-              onChange={(destination) =>
-                setSearch((v) => ({ ...v, destination }))
-              }
-            />
+              BOOK YOUR JOURNEY
+            </Text>
+            <View style={{ height: 1, backgroundColor: "#DDD4C9", flex: 1 }} />
           </View>
           <View
             style={{
-              flex: desktop ? 1.4 : undefined,
-              flexDirection: "row",
-              gap: 20,
-              borderLeftWidth: desktop ? 1 : 0,
-              borderTopWidth: desktop ? 0 : 1,
-              borderColor: glass.separator,
-              paddingLeft: desktop ? 20 : 0,
-              paddingTop: desktop ? 0 : 18,
+              flexDirection: fieldsRow ? "row" : "column",
+              gap: wide ? 24 : 22,
             }}
           >
-            {(["date", "passengers"] as const).map((field, i) => (
+            <View
+              style={{
+                flex: fieldsRow ? 1.85 : undefined,
+                minWidth: 0,
+                flexDirection: "row",
+                gap: fieldGap,
+                zIndex: 30,
+              }}
+            >
+              <LocationInput
+                ticket
+                label="From"
+                value={search.origin}
+                onChange={(origin) => setSearch((v) => ({ ...v, origin }))}
+              />
               <Pressable
                 accessibilityRole="button"
-                key={field}
-                onPress={() => setPicker(field)}
-                style={({ pressed }) => ({
-                  flex: 1,
-                  gap: 10,
-                  opacity: pressed ? 0.65 : 1,
-                })}
+                accessibilityLabel="Swap origin and destination"
+                onPress={() =>
+                  setSearch((v) => ({
+                    ...v,
+                    origin: v.destination,
+                    destination: v.origin,
+                  }))
+                }
+                style={{
+                  alignSelf: "center",
+                  borderRadius: 30,
+                  borderWidth: 1,
+                  borderColor: "#DAD0C4",
+                  width: 40,
+                  height: 40,
+                  flexShrink: 0,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                <Text
+                <Icon name="swap-horizontal" color="#29241F" size={17} />
+              </Pressable>
+              <View
+                style={{
+                  width: 1,
+                  borderLeftWidth: 1,
+                  borderStyle: "dashed",
+                  borderColor: "#C9BFB2",
+                }}
+              />
+              <LocationInput
+                ticket
+                label="To"
+                value={search.destination}
+                onChange={(destination) =>
+                  setSearch((v) => ({ ...v, destination }))
+                }
+              />
+            </View>
+            <View
+              style={{
+                flex: fieldsRow ? 1.5 : undefined,
+                minWidth: 0,
+                flexDirection: "row",
+                gap: 26,
+                borderLeftWidth: fieldsRow ? 1 : 0,
+                borderTopWidth: fieldsRow ? 0 : 1,
+                borderStyle: "dashed",
+                borderColor: "#C9BFB2",
+                paddingLeft: fieldsRow ? 24 : 0,
+                paddingTop: fieldsRow ? 0 : 20,
+              }}
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Choose departure date"
+                onPress={() => setPicker("date")}
+                style={{ flex: 1.2, minWidth: 0, gap: 19 }}
+              >
+                <Text style={{ fontSize: 11 }}>Departure</Text>
+                <View
                   style={{
-                    fontSize: 9,
-                    letterSpacing: 1.5,
-                    color: glass.muted,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 12,
                   }}
                 >
-                  {i === 0 ? "DEPARTURE" : "TRAVELERS"}
-                </Text>
-                <View style={[s.row, { gap: 6 }]}>
+                  <Icon name="calendar-outline" size={21} color="#211D19" />
                   <Text
                     style={{
-                      fontSize: 17,
-                      fontWeight: "500",
-                      color: glass.text,
+                      fontSize: cardWidth < 380 ? 12 : 15,
+                      flexShrink: 1,
                     }}
                   >
-                    {i === 0
-                      ? formatDate(search.date)
-                      : `${search.passengers} Adult${search.passengers > 1 ? "s" : ""}`}
+                    {date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </Text>
-                  <Icon name="chevron-down" size={12} color={glass.dim} />
+                </View>
+                <Text
+                  style={{ fontSize: 8, letterSpacing: 1.8, color: "#6F6256" }}
+                >
+                  {date
+                    .toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    })
+                    .toUpperCase()}
+                </Text>
+              </Pressable>
+              <View
+                style={{
+                  width: 1,
+                  borderLeftWidth: 1,
+                  borderStyle: "dashed",
+                  borderColor: "#C9BFB2",
+                }}
+              />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Choose passengers"
+                onPress={() => setPicker("passengers")}
+                style={{ flex: 0.8, minWidth: 0, gap: 18 }}
+              >
+                <Text style={{ fontSize: 11 }}>Passengers</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 13,
+                    alignItems: "center",
+                  }}
+                >
+                  <Icon name="person-outline" size={21} color="#211D19" />
+                  <Text style={{ fontSize: 17 }}>{search.passengers}</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 8,
+                      letterSpacing: 1.2,
+                      color: "#5C5146",
+                      flexShrink: 1,
+                    }}
+                  >
+                    ECONOMY
+                  </Text>
+                  <Icon name="chevron-down" size={10} color="#5C5146" />
                 </View>
               </Pressable>
-            ))}
+            </View>
           </View>
-          <GlassButton
-            primary
-            title="Search routes"
-            icon="arrow-forward"
-            disabled={searching}
-            onPress={submit}
-          />
         </View>
-      </GlassSurface>
+        {desktop && (
+          <View
+            style={{
+              width: 72,
+              borderRadius: 9,
+              backgroundColor: "#EEE8E0",
+              borderLeftWidth: 2,
+              borderRightWidth: 2,
+              borderStyle: "dotted",
+              borderColor: "#9B8B7A",
+              padding: 15,
+              justifyContent: "center",
+            }}
+          >
+            <Barcode vertical height={154} />
+          </View>
+        )}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Search routes"
+          accessibilityState={{ disabled: searching }}
+          disabled={searching}
+          onPress={submit}
+          style={({ pressed }) => ({
+            width: desktop ? 266 : undefined,
+            minHeight: desktop ? 178 : 85,
+            backgroundColor: pressed ? "#3D342D" : "rgba(22,19,16,0.93)",
+            borderWidth: 1,
+            borderColor: "#948577",
+            borderRadius: 13,
+            padding: desktop ? 28 : 20,
+            minWidth: 0,
+            justifyContent: "space-between",
+            flexDirection: desktop ? "column" : "row",
+            alignItems: "flex-end",
+            opacity: searching ? 0.6 : 1,
+          })}
+        >
+          <Icon name="airplane" size={25} color="#EEE4D8" />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: cardWidth < 380 ? 12 : 24,
+            }}
+          >
+            <Text
+              style={{
+                color: "#F7F1E9",
+                fontSize: 9,
+                fontWeight: "700",
+                letterSpacing: cardWidth < 380 ? 1.5 : 3,
+              }}
+            >
+              SEARCH FLIGHTS
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "#D2C4B3",
+                width: 40,
+                height: 40,
+                borderRadius: 24,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Icon name="arrow-forward" size={18} color="#F7F1E9" />
+            </View>
+          </View>
+        </Pressable>
+      </View>
       {!!(error || searchError) && (
         <Text
           accessibilityRole="alert"
-          style={{ color: glass.error, fontSize: 13 }}
+          style={{ color: "#FFDBCC", padding: 10 }}
         >
           {error || searchError}
         </Text>
@@ -204,29 +332,24 @@ export function SearchCard({ clear = false }: { clear?: boolean }) {
       >
         <View
           style={{
-            flex: 1,
-            backgroundColor: glass.scrim,
+            flex: desktop ? 1 : undefined,
+            minWidth: 0,
+            backgroundColor: "rgba(20,16,12,0.65)",
             justifyContent: "center",
-            padding: 24,
             alignItems: "center",
+            padding: 24,
           }}
         >
           <GlassPanel
-            style={{
-              width: "100%",
-              maxWidth: 440,
-              maxHeight: "90%",
-              backgroundColor: glass.darkStrong,
-            }}
+            style={{ width: "100%", maxWidth: 440, maxHeight: "90%" }}
           >
-            <ScrollView
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={{ gap: 12 }}
-            >
-              <Text style={[s.sectionTitle, { color: glass.text }]}>
+            <ScrollView contentContainerStyle={{ gap: 12 }}>
+              <Text
+                style={{ fontSize: 24, fontWeight: "600", color: "#27211C" }}
+              >
                 {picker === "date" ? "Choose departure" : "How many travelers?"}
               </Text>
-              <Text style={[s.muted, { color: glass.muted }]}>
+              <Text style={{ color: "#766A5E", marginBottom: 8 }}>
                 {picker === "date"
                   ? "Available demo dates · October 2026"
                   : "Adults · age 12 and above"}
@@ -244,34 +367,28 @@ export function SearchCard({ clear = false }: { clear?: boolean }) {
                 <GlassButton
                   key={value}
                   primary={
-                    typeof value === "string"
-                      ? value === search.date
-                      : value === search.passengers
+                    value ===
+                    (picker === "date" ? search.date : search.passengers)
                   }
-                  accessibilityState={{
-                    selected:
-                      typeof value === "string"
-                        ? value === search.date
-                        : value === search.passengers,
-                  }}
                   title={
                     typeof value === "string"
-                      ? formatDate(value)
-                      : `${value} Adult${value > 1 ? "s" : ""}`
+                      ? new Date(value + "T12:00:00").toLocaleDateString(
+                          "en-US",
+                          { month: "long", day: "numeric" },
+                        )
+                      : value + " Adult" + (value > 1 ? "s" : "")
                   }
                   onPress={() => {
-                    if (typeof value === "string")
-                      setSearch((v) => ({ ...v, date: value }));
-                    else setSearch((v) => ({ ...v, passengers: value }));
+                    setSearch((v) =>
+                      typeof value === "string"
+                        ? { ...v, date: value }
+                        : { ...v, passengers: value },
+                    );
                     setPicker(null);
                   }}
                 />
               ))}
-              <GlassButton
-                primary
-                title="Done"
-                onPress={() => setPicker(null)}
-              />
+              <GlassButton title="Done" onPress={() => setPicker(null)} />
             </ScrollView>
           </GlassPanel>
         </View>

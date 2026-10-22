@@ -8,6 +8,7 @@ export interface ClearGlassProps extends ViewProps {
   displace?: number;
   backgroundOpacity?: number;
   refraction?: boolean;
+  frosted?: boolean;
 }
 /** Clear center, thin specular edges; refraction is a progressive web enhancement. */
 export function ClearGlassSurface({
@@ -20,6 +21,7 @@ export function ClearGlassSurface({
   displace = 0.5,
   backgroundOpacity = 0.035,
   refraction = true,
+  frosted = false,
   ...props
 }: ClearGlassProps) {
   return (
@@ -43,6 +45,7 @@ export function ClearGlassSurface({
         displace={displace}
         backgroundOpacity={backgroundOpacity}
         refraction={refraction}
+        frosted={frosted}
       />
       {children}
     </View>

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Pressable, Share, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,7 +12,6 @@ import { TransportBadge } from "../../components/TransportBadge";
 import { BookingModal } from "../../components/BookingModal";
 import { routeRepository, fare, duration } from "../../data/routes";
 import { fromLegacyRoute } from "../../services/travel/adapters";
-import { JourneyRoute } from "../../types/travel";
 import { useTravel, formatDate } from "../../store/TravelContext";
 import { useResponsive } from "../../hooks/useResponsive";
 export default function Details() {
@@ -21,7 +20,7 @@ export default function Details() {
     date?: string;
     passengers?: string;
   }>();
-  const { search, session, saved, isSaved, toggleSave } = useTravel();
+  const { search, session } = useTravel();
   const { wide } = useResponsive();
   const [modal, setModal] = useState(false);
   const [shareError, setShareError] = useState("");
@@ -29,22 +28,13 @@ export default function Details() {
     params.date && /^2026-10-2[4-8]$/.test(params.date)
       ? params.date
       : search.date;
-  const savedRoute = saved.find(
-    (s) => s.route.id === params.id && s.search.date === date,
-  )?.route as JourneyRoute | undefined;
   const legacy = routeRepository.get(params.id);
   const result = session?.options.find(
     (option) =>
       option.id === params.id &&
       option.segments[0]?.departureTime.startsWith(date),
   );
-  const route =
-    result ??
-    (savedRoute?.segments
-      ? savedRoute
-      : legacy
-        ? fromLegacyRoute(legacy, date)
-        : undefined);
+  const route = result ?? (legacy ? fromLegacyRoute(legacy, date) : undefined);
   if (!route)
     return (
       <Page>
@@ -59,12 +49,6 @@ export default function Details() {
     6,
     Math.max(1, Math.floor(Number(params.passengers) || search.passengers)),
   );
-  const itinerary = {
-    origin: route.origin,
-    destination: route.destination,
-    date,
-    passengers,
-  };
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <Page style={{ gap: 28 }}>
@@ -146,12 +130,6 @@ export default function Details() {
         <View style={[s.row, { flexWrap: "wrap" }]}>
           <Button
             secondary
-            title={isSaved(route.id, date) ? "Saved route" : "Save route"}
-            icon={isSaved(route.id, date) ? "heart" : "heart-outline"}
-            onPress={() => toggleSave(route, itinerary)}
-          />
-          <Button
-            secondary
             title="Share"
             icon="share-outline"
             onPress={async () => {
@@ -174,7 +152,7 @@ export default function Details() {
       <SafeAreaView
         edges={["bottom"]}
         style={{
-          backgroundColor: colors.navy,
+          backgroundColor: "#E9DFD3",
           borderTopWidth: 1,
           borderColor: colors.line,
         }}

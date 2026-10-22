@@ -1,4 +1,4 @@
-﻿import { View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { TransportMode } from "../types/route";
 import { colors, Icon } from "./ui";
 const labels = {
@@ -18,7 +18,7 @@ export function TransportBadge({ mode }: { mode: TransportMode }) {
         backgroundColor: colors.pale,
         paddingHorizontal: 9,
         paddingVertical: 5,
-        borderRadius: 6,
+        borderRadius: 2,
       }}
     >
       <Icon

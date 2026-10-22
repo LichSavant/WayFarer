@@ -1,10 +1,7 @@
-﻿import { useState } from "react";
-import { ImageBackground, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { popularRoutes } from "../data/popularRoutes";
 import { fare } from "../data/routes";
-import { GlassSurface } from "./glass/GlassSurface";
-import { glass, radius } from "./theme";
-import { Icon } from "./Icon";
+import { airportCode, Barcode } from "./ticket";
 export function PopularRouteCard({
   item,
   onPress,
@@ -14,96 +11,81 @@ export function PopularRouteCard({
   onPress: () => void;
   fluid?: boolean;
 }) {
-  const [hover, setHover] = useState(false);
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Explore ${item.origin} to ${item.destination}, from ${fare(item.price)}`}
       onPress={onPress}
-      onHoverIn={() => setHover(true)}
-      onHoverOut={() => setHover(false)}
       style={({ pressed }) => ({
         width: fluid ? "100%" : 260,
-        opacity: pressed ? 0.8 : 1,
+        opacity: pressed ? 0.65 : 1,
+        backgroundColor: "#FCFCFA",
+        borderWidth: 1,
+        borderColor: "#D3D3CC",
+        borderRadius: 4,
       })}
     >
-      <ImageBackground
-        source={{ uri: item.image }}
-        imageStyle={{ borderRadius: radius.medium }}
-        style={{
-          height: 310,
-          justifyContent: "space-between",
-          padding: 12,
-          backgroundColor: "#759BA5",
-          borderRadius: radius.medium,
-        }}
-      >
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 10,
-            letterSpacing: 1.1,
-            fontWeight: "500",
-            color: glass.text,
-            padding: 8,
-            backgroundColor: glass.darkStrong,
-            borderRadius: radius.small,
-          }}
-        >
-          {item.modes.toUpperCase()}
-        </Text>
-        <GlassSurface
-          level="micro"
-          blur={false}
-          style={{
-            padding: 16,
-            gap: 8,
-            backgroundColor: glass.darkStrong,
-            borderColor: hover ? glass.highlight : glass.border,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: "500",
-                letterSpacing: 0.4,
-                color: glass.text,
-                flex: 1,
-              }}
-            >
-              {item.origin.replace(" City", "")} → {item.destination}
-            </Text>
-            <Icon name="arrow-forward" size={17} color={glass.text} />
-          </View>
-          <Text style={{ fontSize: 12, color: glass.muted }}>
-            From{" "}
-            <Text
-              style={{ fontSize: 21, fontWeight: "500", color: glass.text }}
-            >
-              {fare(item.price)}
-            </Text>{" "}
-            / traveler
+      <View style={{ padding: 20, gap: 22 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={{ fontSize: 8, fontWeight: "800", letterSpacing: 1 }}>
+            WAYFARER
           </Text>
-        </GlassSurface>
-      </ImageBackground>
-      <Text
+          <Text style={{ fontSize: 8, color: "#666" }}>
+            {item.modes.toUpperCase()}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ fontSize: 34, fontWeight: "900", letterSpacing: -2 }}>
+            {airportCode(item.origin)}
+          </Text>
+          <Text style={{ color: "#999" }}>✈</Text>
+          <Text style={{ fontSize: 34, fontWeight: "900", letterSpacing: -2 }}>
+            {airportCode(item.destination)}
+          </Text>
+        </View>
+        <View>
+          <Text style={{ fontSize: 11, fontWeight: "700" }}>
+            {item.destination.toUpperCase()}
+          </Text>
+          <Text style={{ fontSize: 11, color: "#777", marginTop: 5 }}>
+            {item.subtitle}
+          </Text>
+        </View>
+      </View>
+      <View
         style={{
-          fontSize: 12,
-          lineHeight: 20,
-          color: "#687A80",
-          paddingTop: 10,
+          borderTopWidth: 1,
+          borderStyle: "dashed",
+          borderColor: "#BDBDB5",
+          padding: 20,
+          gap: 18,
         }}
       >
-        {item.subtitle}
-      </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View>
+            <Text style={{ fontSize: 8, letterSpacing: 1, color: "#777" }}>
+              FARE FROM
+            </Text>
+            <Text style={{ fontSize: 24, fontWeight: "700", marginTop: 5 }}>
+              {fare(item.price)}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 22 }}>✈</Text>
+        </View>
+        <Barcode height={24} />
+      </View>
     </Pressable>
   );
 }

@@ -1,291 +1,100 @@
-﻿import { useEffect } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import { GlassBackdropProvider, HeroPhoto } from "../glass/HeroBackdrop";
-import { useResponsive } from "../../hooks/useResponsive";
-import { useHeroCarousel } from "../../hooks/useHeroCarousel";
-import { heroSlides, getDestinationSlide } from "../../data/heroSlides";
-import { useTravel } from "../../store/TravelContext";
-import { SiteHeader } from "../SiteHeader";
+import { Text, View } from "react-native";
 import { SearchCard } from "../SearchCard";
-import { ClearGlassSurface } from "../glass/ClearGlassSurface";
-import { GlassButton } from "../glass/GlassButton";
-import { RouteSketch } from "../RouteSketch";
-import { glass } from "../theme";
-import { Icon } from "../Icon";
-export function DestinationHero({ destination }: { destination?: string }) {
-  const { wide, desktop } = useResponsive();
-  const { height } = useWindowDimensions();
-  const { search } = useTravel();
-  const carousel = useHeroCarousel();
-  const { goTo } = carousel;
-  useEffect(() => {
-    goTo(getDestinationSlide(destination));
-  }, [destination, goTo]);
-  const slide = heroSlides[carousel.index];
-  const next = heroSlides[(carousel.index + 1) % heroSlides.length];
+import { useResponsive } from "../../hooks/useResponsive";
+export function DestinationHero(_props: { destination?: string }) {
+  const { wide, desktop, contentWidth } = useResponsive();
   return (
-    <GlassBackdropProvider>
+    <View style={{ zIndex: 20 }}>
       <View
         style={{
-          minHeight: Math.max(height * 0.98, desktop ? 760 : 0),
-          backgroundColor: "#254B55",
-          justifyContent: "center",
-          paddingVertical: wide ? 48 : 20,
-          zIndex: 20,
+          minHeight: desktop ? 355 : wide ? 330 : 320,
+          paddingBottom: 30,
+          paddingTop: desktop ? 49 : 36,
         }}
       >
         <View
-          pointerEvents="none"
-          accessible={false}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={[StyleSheet.absoluteFill, { overflow: "hidden" }]}
+          style={{
+            flexDirection: "row",
+            gap: contentWidth < 380 ? 10 : 17,
+            alignItems: "center",
+            marginBottom: 18,
+          }}
         >
-          <HeroPhoto source={slide.image} />
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              { backgroundColor: "rgba(2,16,22,0.08)" },
-            ]}
-          />
-          {/* Localized contrast leaves most of the photograph untouched. */}
+          <Text
+            style={{
+              fontSize: 8,
+              letterSpacing: contentWidth < 380 ? 2 : 4.4,
+              color: "#E4DCD3",
+              flexShrink: 1,
+            }}
+          >
+            MORE THAN A DESTINATION
+          </Text>
           <View
             style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: wide ? "43%" : "100%",
-              backgroundColor: wide ? "rgba(2,16,22,.30)" : "rgba(2,16,22,.22)",
+              width: contentWidth < 380 ? 28 : 62,
+              height: 1,
+              backgroundColor: "#9E9286",
             }}
           />
         </View>
-        <ClearGlassSurface
-          width={wide ? "86%" : "94%"}
-          borderRadius={wide ? 32 : 22}
-          distortionScale={-180}
-          displace={0.5}
-          backgroundOpacity={0.025}
+        <Text
           style={{
-            maxWidth: 1320,
-            minHeight: desktop ? Math.max(height * 0.74, 630) : undefined,
-            alignSelf: "center",
+            color: "#FEFCF9",
+            fontSize: desktop ? 103 : Math.min(90, contentWidth * 0.23),
+            lineHeight: desktop ? 100 : Math.min(94, contentWidth * 0.25),
+            fontWeight: "500",
+            letterSpacing: desktop ? -6 : -3,
           }}
         >
-          <SiteHeader inverse clear />
-          <View
-            style={{
-              paddingHorizontal: desktop ? 42 : wide ? 30 : 20,
-              paddingTop: wide ? 24 : 16,
-              paddingBottom: wide ? 24 : 20,
-              gap: wide ? 28 : 22,
-              flex: 1,
-            }}
-          >
-            <View
+          Travel
+        </Text>
+        <Text
+          style={{
+            color: "#D8C0AA",
+            fontSize: desktop ? 108 : Math.min(94, contentWidth * 0.25),
+            lineHeight: desktop ? 108 : Math.min(100, contentWidth * 0.27),
+            fontWeight: "500",
+            letterSpacing: desktop ? -6 : -3,
+          }}
+        >
+          Further
+        </Text>
+        <Text
+          style={{
+            color: "#E4DED7",
+            fontSize: wide ? 15 : 13,
+            lineHeight: 22,
+            marginTop: 13,
+          }}
+        >
+          Extraordinary places. Effortless journeys.{"\n"}WayFarer connects you
+          to a more open world.
+        </Text>
+        {desktop && (
+          <View style={{ position: "absolute", right: 26, top: 175, gap: 8 }}>
+            <Text
               style={{
-                flexDirection: wide ? "row" : "column",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                flex: 1,
-                gap: 24,
+                color: "#D6C8BA",
+                fontSize: 9,
+                letterSpacing: 4,
+                lineHeight: 20,
               }}
             >
-              <View
-                style={{
-                  gap: 18,
-                  alignSelf: "stretch",
-                  maxWidth: 430,
-                  flex: wide ? 1 : undefined,
-                  minWidth: 0,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 8,
-                    fontWeight: "500",
-                    letterSpacing: 2,
-                    color: glass.muted,
-                  }}
-                >
-                  WAYFARER / THE PHILIPPINES
-                </Text>
-                <Text
-                  style={{
-                    fontSize: desktop ? 62 : wide ? 54 : 43,
-                    lineHeight: desktop ? 65 : wide ? 58 : 47,
-                    fontWeight: "600",
-                    letterSpacing: -1.8,
-                    color: "white",
-                  }}
-                >
-                  Find your{String.fromCharCode(10)}way there.
-                </Text>
-                <View
-                  style={{ flexDirection: "row", gap: 6, alignItems: "center" }}
-                >
-                  <Icon name="location-outline" size={13} color="white" />
-                  <Text style={{ fontSize: 10, color: "white" }}>
-                    Across the islands. Beyond the ordinary.
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row", gap: 22, marginTop: 8 }}>
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      color: "white",
-                      paddingBottom: 7,
-                      borderBottomWidth: 1,
-                      borderColor: "white",
-                    }}
-                  >
-                    Explore destinations
-                  </Text>
-                  <Text style={{ fontSize: 9, color: glass.muted }}>
-                    Compare sea & sky
-                  </Text>
-                </View>
-                {wide && (
-                  <RouteSketch
-                    origin={search.origin}
-                    destination={search.destination}
-                  />
-                )}
-              </View>
-              {wide && (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Preview next destination image"
-                  onPress={() => goTo(carousel.index + 1)}
-                  style={{ width: desktop ? 250 : 190 }}
-                >
-                  <ClearGlassSurface
-                    borderRadius={14}
-                    backgroundOpacity={0.08}
-                    distortionScale={-50}
-                    refraction={false}
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      padding: 10,
-                      alignItems: "center",
-                    }}
-                  >
-                    <View style={{ flex: 1, gap: 6, paddingLeft: 4 }}>
-                      <Text
-                        style={{
-                          fontSize: 8,
-                          letterSpacing: 1.5,
-                          color: glass.muted,
-                        }}
-                      >
-                        UP NEXT / 0
-                        {((carousel.index + 1) % heroSlides.length) + 1}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          lineHeight: 18,
-                          color: "white",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {next.title}
-                      </Text>
-                    </View>
-                    <Image
-                      source={next.image}
-                      resizeMode="cover"
-                      style={{ width: 68, height: 72, borderRadius: 10 }}
-                    />
-                  </ClearGlassSurface>
-                </Pressable>
-              )}
-            </View>
-            <SearchCard clear />
+              NEW{"\n"}HORIZONS{"\n"}ALWAYS{"\n"}AHEAD
+            </Text>
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 14,
-                flexWrap: "wrap",
+                width: 30,
+                height: 1,
+                backgroundColor: "#A69889",
+                marginTop: 10,
               }}
-            >
-              <Text
-                style={{ fontSize: 8, letterSpacing: 1.2, color: glass.muted }}
-              >
-                LESS SEARCHING. MORE GOING.
-              </Text>
-              <View
-                style={{ flexDirection: "row", gap: 12, alignItems: "center" }}
-              >
-                <Text
-                  style={{
-                    fontSize: 10,
-                    color: "white",
-                    fontVariant: ["tabular-nums"],
-                  }}
-                >
-                  0{carousel.index + 1} / 0{heroSlides.length}
-                </Text>
-                <View style={{ flexDirection: "row", gap: 5 }}>
-                  {heroSlides.map((item, i) => (
-                    <Pressable
-                      key={item.id}
-                      accessibilityRole="button"
-                      accessibilityLabel={`Show destination image ${i + 1}`}
-                      accessibilityState={{ selected: i === carousel.index }}
-                      onPress={() => goTo(i)}
-                      style={{
-                        width: wide ? 40 : 22,
-                        height: 44,
-                        justifyContent: "center",
-                      }}
-                    >
-                      <View
-                        style={{
-                          height: 1,
-                          backgroundColor:
-                            i === carousel.index ? "white" : "#FFFFFF55",
-                        }}
-                      />
-                    </Pressable>
-                  ))}
-                </View>
-                <GlassButton
-                  icon="arrow-back"
-                  accessibilityLabel="Previous destination image"
-                  onPress={() => goTo(carousel.index - 1)}
-                  style={{
-                    backgroundColor: "transparent",
-                    borderRadius: 24,
-                    minHeight: 44,
-                  }}
-                />
-                <GlassButton
-                  primary
-                  icon="arrow-forward"
-                  accessibilityLabel="Next destination image"
-                  onPress={() => goTo(carousel.index + 1)}
-                  style={{
-                    backgroundColor: "#F5F8F6",
-                    borderRadius: 24,
-                    minHeight: 44,
-                  }}
-                />
-              </View>
-            </View>
+            />
           </View>
-        </ClearGlassSurface>
+        )}
       </View>
-    </GlassBackdropProvider>
+      <SearchCard ticket />
+    </View>
   );
 }

@@ -1,8 +1,9 @@
-﻿import { Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { JourneyRoute } from "../types/travel";
 import { Button, colors, Icon, s } from "./ui";
 import { fare, duration } from "../data/routes";
 import { GlassPanel } from "./glass/GlassPanel";
+import { Barcode } from "./ticket";
 import { glass } from "./theme";
 export function RecommendationCard({
   label,
@@ -28,8 +29,8 @@ export function RecommendationCard({
       style={[
         {
           flex: 1,
-          height: "100%",
-          padding: 22,
+          padding: 18,
+          minWidth: 0,
           borderColor: primary ? glass.highlight : glass.borderStrong,
           backgroundColor: primary ? glass.lightStrong : glass.light,
           gap: 18,
@@ -83,7 +84,13 @@ export function RecommendationCard({
           </Text>
         </View>
       </View>
-      <View style={s.line} />
+      <View
+        style={{
+          borderTopWidth: 1,
+          borderStyle: "dashed",
+          borderColor: colors.line,
+        }}
+      />
       <View style={{ gap: 4 }}>
         <Text
           style={[s.price, { fontSize: primary ? 32 : 25, fontWeight: "500" }]}
@@ -109,6 +116,7 @@ export function RecommendationCard({
         </Text>
         <Text style={[s.muted, { fontSize: 12 }]}>{reason}</Text>
       </View>
+      <Barcode height={22} />
       <Button
         title="View trip"
         secondary={!primary}

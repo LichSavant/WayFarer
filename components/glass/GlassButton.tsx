@@ -1,22 +1,19 @@
-﻿import { useState, ComponentProps } from "react";
+import { useState, ComponentProps } from "react";
 import {
   Pressable,
   Text,
   ViewStyle,
   StyleProp,
   AccessibilityState,
-  StyleSheet,
 } from "react-native";
-import { colors, glass, radius } from "../theme";
+import { colors, radius } from "../theme";
 import { Icon } from "../Icon";
-import { ClearGlassEffect } from "./ClearGlassEffect";
 import { GlassTone } from "./styles";
 export function GlassButton({
   title,
   icon,
   onPress,
   primary = false,
-  tone = "dark",
   style,
   accessibilityLabel,
   disabled = false,
@@ -33,10 +30,7 @@ export function GlassButton({
   accessibilityState?: AccessibilityState;
 }) {
   const [hover, setHover] = useState(false);
-  const suppliedRadius = StyleSheet.flatten(style)?.borderRadius;
-  const curve =
-    typeof suppliedRadius === "number" ? suppliedRadius : radius.medium;
-  const text = primary || tone === "light" ? colors.navy : glass.text;
+  const ink = primary ? colors.white : colors.navy;
   return (
     <Pressable
       accessibilityRole="button"
@@ -48,47 +42,41 @@ export function GlassButton({
       onHoverOut={() => setHover(false)}
       style={({ pressed }) => [
         {
-          position: "relative",
           minHeight: 48,
           paddingVertical: 13,
           paddingHorizontal: title ? 20 : 14,
-          borderRadius: curve,
+          borderRadius: radius.small,
           borderWidth: 1,
-          borderColor: hover
-            ? glass.highlight
-            : tone === "light"
-              ? glass.borderStrong
-              : glass.border,
+          borderColor: primary ? colors.navy : colors.line,
           flexDirection: "row",
           gap: 10,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: primary
-            ? "rgba(189,239,242,0.60)"
-            : tone === "light"
-              ? "rgba(255,255,255,0.28)"
-              : "rgba(255,255,255,0.045)",
-          opacity: disabled ? 0.5 : pressed ? 0.75 : 1,
+            ? hover
+              ? "#383833"
+              : colors.navy
+            : hover
+              ? colors.pale
+              : colors.white,
+          opacity: disabled ? 0.45 : pressed ? 0.7 : 1,
         },
         style,
       ]}
     >
-      <ClearGlassEffect
-        borderRadius={curve}
-        distortionScale={-60}
-        displace={0.5}
-        backgroundOpacity={hover ? 0.18 : 0.08}
-        refraction={false}
-        tone={primary ? "light" : tone}
-      />
       {title && (
         <Text
-          style={{ color: text, fontSize: 14, fontWeight: "600", zIndex: 1 }}
+          style={{
+            color: ink,
+            fontSize: 12,
+            fontWeight: "700",
+            letterSpacing: 0.5,
+          }}
         >
           {title}
         </Text>
       )}
-      {icon && <Icon name={icon} size={18} color={text} />}
+      {icon && <Icon name={icon} size={17} color={ink} />}
     </Pressable>
   );
 }
