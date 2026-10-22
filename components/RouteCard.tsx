@@ -5,7 +5,7 @@ import { TravelOption } from "../types/travel";
 import { duration, fare } from "../data/routes";
 import { useTravel } from "../store/TravelContext";
 import { Icon } from "./Icon";
-import { airportCode, Barcode, TicketMap } from "./ticket";
+import { airportCode, Barcode, TicketMap, ticketPaper } from "./ticket";
 import { useResponsive } from "../hooks/useResponsive";
 export function RouteCard({
   route,
@@ -22,6 +22,7 @@ export function RouteCard({
   compact?: boolean;
   date?: string;
 }) {
+  const [hovered, setHovered] = useState(false);
   const { contentWidth } = useResponsive();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const cardWidth = measuredWidth ?? contentWidth;
@@ -42,17 +43,18 @@ export function RouteCard({
       accessibilityRole="button"
       accessibilityLabel={`View ${route.provider} route, ${fare(price * passengers)} total`}
       onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
       style={({ pressed }) => ({
-        opacity: pressed ? 0.8 : 1,
+        ...ticketPaper,
+        transform: [{ translateY: pressed ? 1 : hovered ? -2 : 0 }],
+        opacity: pressed ? 0.95 : 1,
         width: "100%",
         minWidth: 0,
         flexDirection: row ? "row" : "column",
         minHeight: compact ? 206 : 210,
-        backgroundColor: "#F2EDE6",
         borderRadius: 12,
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.3)",
       })}
     >
       <View
@@ -259,7 +261,14 @@ export function RouteCard({
           borderLeftWidth: row ? 1 : 0,
           borderTopWidth: row ? 0 : 1,
           borderStyle: "dashed",
-          borderColor: "#C5B6A6",
+          borderColor: "#BDA68D",
+          backgroundColor: "rgba(219,202,181,0.15)",
+          borderTopRightRadius: row ? 12 : 0,
+          borderBottomRightRadius: 12,
+          borderBottomLeftRadius: row ? 0 : 12,
+          boxShadow: row
+            ? "inset 2px 0 3px rgba(103,76,49,0.06)"
+            : "inset 0 2px 3px rgba(103,76,49,0.06)",
           gap: 18,
         }}
       >

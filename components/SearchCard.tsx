@@ -9,7 +9,7 @@ import { GlassPanel } from "./glass/GlassPanel";
 import { GlassButton } from "./glass/GlassButton";
 import { LocationInput } from "./LocationInput";
 import { SearchProgress } from "./SearchProgress";
-import { Barcode, TicketMap } from "./ticket";
+import { Barcode, TicketMap, ticketPaper } from "./ticket";
 export function SearchCard(_props: { clear?: boolean; ticket?: boolean }) {
   const { search, setSearch, runSearch, searching, searchError } = useTravel();
   const { wide, contentWidth } = useResponsive();
@@ -45,9 +45,9 @@ export function SearchCard(_props: { clear?: boolean; ticket?: boolean }) {
       >
         <View
           style={{
+            ...ticketPaper,
             flex: desktop ? 1 : undefined,
             minWidth: 0,
-            backgroundColor: "#F5F1EB",
             borderRadius: 13,
             paddingHorizontal: wide ? 30 : 22,
             paddingVertical: 22,
@@ -244,11 +244,13 @@ export function SearchCard(_props: { clear?: boolean; ticket?: boolean }) {
             style={{
               width: 72,
               borderRadius: 9,
-              backgroundColor: "#EEE8E0",
+              backgroundColor: "#EEE3D5",
+              boxShadow:
+                "0 15px 32px rgba(19,12,7,0.20), inset 2px 0 3px rgba(112,84,54,0.10), inset -2px 0 3px rgba(112,84,54,0.08)",
               borderLeftWidth: 2,
               borderRightWidth: 2,
               borderStyle: "dotted",
-              borderColor: "#9B8B7A",
+              borderColor: "#9B8064",
               padding: 15,
               justifyContent: "center",
             }}
@@ -267,7 +269,9 @@ export function SearchCard(_props: { clear?: boolean; ticket?: boolean }) {
             minHeight: desktop ? 178 : 85,
             backgroundColor: pressed ? "#3D342D" : "rgba(22,19,16,0.93)",
             borderWidth: 1,
-            borderColor: "#948577",
+            borderColor: "#A08D79",
+            boxShadow:
+              "0 18px 38px rgba(12,8,5,0.32), inset 0 1px 0 rgba(255,241,220,0.16)",
             borderRadius: 13,
             padding: desktop ? 28 : 20,
             minWidth: 0,
